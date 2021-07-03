@@ -1,6 +1,7 @@
 import os
 
-from kangakari import Bot, __version__
+from kangakari import Bot
+from kangakari import __version__
 
 
 def main():
@@ -10,7 +11,7 @@ def main():
         uvloop.install()
 
     bot = Bot(__version__)
-    bot.run()
+    bot.run(asyncio_debug=True)
 
 
 if __name__ == "__main__":

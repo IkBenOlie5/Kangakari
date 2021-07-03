@@ -1,11 +1,11 @@
 import logging
-import typing as t
 from pathlib import Path
 
 import hikari
 import lightbulb
 from aiohttp import ClientSession
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+
 from kangakari import Config
 from kangakari.core.cache import Cache
 from kangakari.core.db import Database

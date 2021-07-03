@@ -5,7 +5,7 @@ import typing as t
 
 import aiomcache
 import msgpack
-from discord.ext.commands import Bot
+from lightbulb import Bot
 
 ExpireT = t.Union[int, float]
 
