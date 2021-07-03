@@ -8,7 +8,10 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from kangakari import Config
 from kangakari.core.cache import Cache
+from kangakari.core.context import Context
 from kangakari.core.db import Database
+from kangakari.core.help import Help
+from kangakari.core.utils import Embeds
 
 
 class Bot(lightbulb.Bot):
@@ -24,6 +27,7 @@ class Bot(lightbulb.Bot):
         self.db = Database(self)
         self.prefix_cache = Cache(self)
         self.session = ClientSession()
+        self.embeds = Embeds()
 
         self.setup_logger()
 
@@ -35,6 +39,7 @@ class Bot(lightbulb.Bot):
             insensitive_commands=True,
             ignore_bots=True,
             logs=self.config.LOG_LEVEL,
+            help_class=Help,
         )
 
         subscriptions = {
@@ -47,6 +52,9 @@ class Bot(lightbulb.Bot):
         }
         for e, c in subscriptions.items():
             self.event_manager.subscribe(e, c)
+
+    def get_context(self, *args, **kwargs):
+        return Context(self, *args, **kwargs)
 
     def setup_logger(self):
         self.log = logging.getLogger(self.__class__.__name__)
@@ -63,10 +71,8 @@ class Bot(lightbulb.Bot):
             try:
                 self.load_extension(f"kangakari.core.plugins.{plugin}")
                 logging.info(f"Plugin '{plugin}' has been loaded.")
-            except lightbulb.errors.ExtensionAlreadyLoaded:
-                logging.error(f"Plugin '{plugin}' is already loaded")
-            except lightbulb.errors.ExtensionNotLoaded:
-                logging.error(f"Plugin '{plugin}' is not currently loaded")
+            except lightbulb.errors.ExtensionMissingLoad:
+                logging.error(f"Plugin '{plugin}' is missing a load function.")
 
     async def on_started(self, _: hikari.StartedEvent) -> None:
         self.scheduler.start()

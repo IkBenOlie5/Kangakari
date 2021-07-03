@@ -13,6 +13,7 @@ def acquire(func: t.Callable[..., t.Any]) -> t.Callable[..., t.Any]:
     @wraps(func)
     async def wrapper(self: "Database", *args: t.Any, **kwargs: t.Any) -> t.Any:
         assert self.is_connected, "Not connected."
+        self.calls += 1
         cxn: asyncpg.Connection
         async with self._pool.acquire() as cxn:
             async with cxn.transaction():
@@ -22,11 +23,12 @@ def acquire(func: t.Callable[..., t.Any]) -> t.Callable[..., t.Any]:
 
 
 class Database:
-    __slots__: t.Sequence[str] = ("bot", "_connected", "_pool")
+    __slots__: t.Sequence[str] = ("bot", "_connected", "_pool", "calls")
 
     def __init__(self, bot: lightbulb.Bot) -> None:
         self.bot: lightbulb.Bot = bot
         self._connected = asyncio.Event()
+        self.calls = 0
 
     async def wait_until_connected(self) -> None:
         await self._connected.wait()

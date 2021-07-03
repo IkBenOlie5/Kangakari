@@ -21,7 +21,7 @@ class Debug(lightbulb.plugins.Plugin):
             except lightbulb.errors.ExtensionNotLoaded:
                 logging.error(f"Plugin '{plugin}' is not currently loaded.")
 
-        await ctx.respond(f"{count} extension(s) {action}ed.")
+        await ctx.respond_embed(f"{count} extension(s) {action}ed.")
 
     @lightbulb.checks.owner_only()
     @lightbulb.commands.command(name="reload")
@@ -41,7 +41,7 @@ class Debug(lightbulb.plugins.Plugin):
     @lightbulb.checks.owner_only()
     @lightbulb.commands.command(name="shutdown")
     async def shutdown_command(self, ctx):
-        await ctx.respond("Shutting down.")
+        await ctx.respond_embed("Shutting down.")
         await ctx.bot.close(force=True)
 
 
