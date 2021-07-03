@@ -1,9 +1,12 @@
+import asyncio
+import logging
+import os
 import typing as t
 from functools import wraps
 
 import aiofiles
 import asyncpg
-from discord.ext.commands import Bot
+import lightbulb
 
 
 def acquire(func: t.Callable[..., t.Any]) -> t.Callable[..., t.Any]:
@@ -19,31 +22,45 @@ def acquire(func: t.Callable[..., t.Any]) -> t.Callable[..., t.Any]:
 
 
 class Database:
-    __slots__: t.Sequence[str] = ("bot", "is_connected", "_pool")
+    __slots__: t.Sequence[str] = ("bot", "_connected", "_pool")
 
-    def __init__(self, bot: Bot) -> None:
-        self.bot: Bot = bot
-        self.is_connected = False
+    def __init__(self, bot: lightbulb.Bot) -> None:
+        self.bot: lightbulb.Bot = bot
+        self._connected = asyncio.Event()
+
+    async def wait_until_connected(self) -> None:
+        await self._connected.wait()
+
+    @property
+    def is_connected(self) -> bool:
+        return self._connected.is_set()
 
     async def connect(self) -> None:
         assert not self.is_connected, "Already connected."
         self._pool: asyncpg.Pool = await asyncpg.create_pool(dsn=self.bot.config.DB_DSN)
-        self.is_connected = True
+        self._connected.set()
+        logging.info("Connected to database.")
+
+        await self.sync()
 
     async def close(self) -> None:
         assert self.is_connected, "Not connected."
         await self._pool.close()
+        self._connected.clear()
+        logging.info("Closed database connection.")
 
     async def sync(self) -> None:
-        await self.execute_script(self.bot._static + "script.sql", self.bot.config.DEFAULT_PREFIX)
+        await self.execute_script(os.path.join(self.bot._static, "script.sql"), self.bot.config.DEFAULT_PREFIX)
         await self.execute_many(
             "INSERT INTO guilds (guildid) VALUES ($1) ON CONFLICT DO NOTHING",
-            [(guild.id,) for guild in self.bot.guilds],
+            [(guild,) for guild in self.bot.cache.get_available_guilds_view()],
         )
-        stored: t.List[int] = [guild_id for guild_id in await self.column("SELECT guildid FROM guilds")]
-        member_of: t.List[int] = [guild.id for guild in self.bot.guilds]
-        to_remove: t.List[t.Tuple[int]] = [(guild_id,) for guild_id in set(stored) - set(member_of)]
+        stored = [guild_id for guild_id in await self.column("SELECT guildid FROM guilds")]
+        member_of = self.bot.cache.get_available_guilds_view()
+        to_remove = [(guild_id,) for guild_id in set(stored) - set(member_of)]
         await self.execute_many("DELETE FROM guilds WHERE guildid = $1;", to_remove)
+
+        logging.info("Synchronised database.")
 
     @acquire
     async def execute(self, query: str, *values: t.Any, _cxn: asyncpg.Connection) -> None:
@@ -70,7 +87,7 @@ class Database:
         return await _cxn.fetch(query, *values)
 
     @acquire
-    async def execute_script(self, path: str, *args, _cxn: asyncpg.Connection):
+    async def execute_script(self, path: str, *args: t.Any, _cxn: asyncpg.Connection) -> None:
         async with aiofiles.open(path, "r") as script:
             await _cxn.execute((await script.read()).format(*args))
 

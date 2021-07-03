@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS guilds(
+    guildid BIGINT NOT NULL PRIMARY KEY,
+    prefix TEXT DEFAULT '{}'
+);
+
+CREATE TABLE IF NOT EXISTS users (
+    userid BIGINT NOT NULL PRIMARY KEY
+);
