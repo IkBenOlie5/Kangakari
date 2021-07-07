@@ -13,7 +13,7 @@ chardet==4.0.0
 ciso8601==2.1.3
 colorlog==5.0.1
 ed25519==1.5
-hikari @ git+https://github.com/hikari-py/hikari@9542df348e095f690d587dd74c5524fa0a021be8
+hikari==2.0.0.dev101
 hikari-lightbulb==0.0.61
 hikari-sake @ git+https://github.com/FasterSpeeding/Sake@49e0d7c8d0866acb2bf3dc001e7d9358cb353f49
 hikari-yuyo==0.0.3a6
