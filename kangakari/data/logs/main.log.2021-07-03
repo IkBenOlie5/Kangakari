@@ -1,0 +1,58 @@
+I 2021-07-03 17:30:28,926 root: Connected to database.
+I 2021-07-03 17:30:28,978 root: Synchronised database.
+I 2021-07-03 17:30:28,978 root: Connected to cache.
+I 2021-07-03 17:30:28,983 root: Plugin 'debug' has been loaded.
+I 2021-07-03 17:30:28,985 root: Plugin 'info' has been loaded.
+I 2021-07-03 17:30:28,989 root: Plugin 'guild' has been loaded.
+I 2021-07-03 17:30:28,989 hikari: planning to start 1 session... you can start 849 sessions before the next window starts at 2021-07-03 19:57:07.499068+02:00
+I 2021-07-03 17:30:29,400 hikari.gateway.0: shard is ready: 1 guilds, testing-kangaroo#2385 (829673220554096680), session 'e48dc6450b652edafb6008ad179154e7' on v8 gateway
+I 2021-07-03 17:30:29,421 apscheduler.scheduler: Scheduler started
+I 2021-07-03 17:30:29,423 hikari: application started successfully in approx 1.34 seconds
+I 2021-07-03 18:57:09,647 hikari.gateway.0: received instruction to reconnect, will resume existing session
+I 2021-07-03 19:58:39,395 apscheduler.scheduler: Scheduler has been shut down
+I 2021-07-03 19:58:39,411 root: Closed database connection.
+I 2021-07-03 19:58:39,413 root: Closed aiohttp session.
+I 2021-07-03 19:58:39,680 hikari.gateway.0: shard has disconnected and shut down normally
+I 2021-07-03 19:58:39,688 hikari: application has successfully terminated
+I 2021-07-03 19:58:43,313 root: Connected to database.
+I 2021-07-03 19:58:43,350 root: Synchronised database.
+I 2021-07-03 19:58:43,350 root: Connected to cache.
+I 2021-07-03 19:58:43,353 root: Plugin 'debug' has been loaded.
+I 2021-07-03 19:58:43,354 root: Plugin 'info' has been loaded.
+I 2021-07-03 19:58:43,357 root: Plugin 'guild' has been loaded.
+I 2021-07-03 19:58:43,358 hikari: planning to start 1 session... you can start 1000 sessions before the next window starts at 2021-07-03 19:58:43.329295+02:00
+I 2021-07-03 19:58:43,729 hikari.gateway.0: shard is ready: 1 guilds, testing-kangaroo#2385 (829673220554096680), session 'b3935d349b26ed40431dcf2c2c4a77b7' on v8 gateway
+I 2021-07-03 19:58:43,744 apscheduler.scheduler: Scheduler started
+I 2021-07-03 19:58:43,745 hikari: application started successfully in approx 1.02 seconds
+I 2021-07-03 19:58:53,751 apscheduler.scheduler: Scheduler has been shut down
+I 2021-07-03 19:58:53,777 root: Closed database connection.
+I 2021-07-03 19:58:53,778 root: Closed aiohttp session.
+I 2021-07-03 19:58:54,037 hikari.gateway.0: shard has disconnected and shut down normally
+I 2021-07-03 19:58:54,042 hikari: application has successfully terminated
+I 2021-07-03 19:58:58,369 root: Connected to database.
+I 2021-07-03 19:58:58,423 root: Synchronised database.
+I 2021-07-03 19:58:58,423 root: Connected to cache.
+I 2021-07-03 19:58:58,426 root: Plugin 'debug' has been loaded.
+I 2021-07-03 19:58:58,429 root: Plugin 'info' has been loaded.
+I 2021-07-03 19:58:58,433 root: Plugin 'guild' has been loaded.
+I 2021-07-03 19:58:58,434 hikari: planning to start 1 session... you can start 999 sessions before the next window starts at 2021-07-04 19:58:43.691755+02:00
+I 2021-07-03 19:58:59,243 hikari.gateway.0: shard is ready: 1 guilds, testing-kangaroo#2385 (829673220554096680), session 'c0354135ecfb055f2bd87f43ae39ff90' on v8 gateway
+I 2021-07-03 19:58:59,263 apscheduler.scheduler: Scheduler started
+I 2021-07-03 19:58:59,264 hikari: application started successfully in approx 2.01 seconds
+W 2021-07-03 20:20:28,550 hikari.gateway.0: connection has not received a HEARTBEAT_ACK for approx 53.9s and is being disconnected, expect a reconnect shortly
+E 2021-07-03 20:20:32,347 hikari.gateway.0: connection is a zombie, last heartbeat sent 45.06s ago
+I 2021-07-03 20:20:37,907 hikari.gateway.0: received invalid session, will need to start a new session
+I 2021-07-03 20:20:38,275 hikari.gateway.0: backing off reconnecting for 3.60s
+I 2021-07-03 20:20:42,261 hikari.gateway.0: shard is ready: 1 guilds, testing-kangaroo#2385 (829673220554096680), session 'c7834fe463124fa4569bf4ef3b7d11cf' on v8 gateway
+W 2021-07-03 23:14:00,381 asyncio: Executing <TimerHandle cancelled _weakref_handle created at /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/aiohttp/helpers.py:549> took 0.100 seconds
+W 2021-07-03 23:14:01,172 hikari.gateway.0: connection has not received a HEARTBEAT_ACK for approx 69.0s and is being disconnected, expect a reconnect shortly
+E 2021-07-03 23:14:01,524 hikari.gateway.0: failed to communicate with server, reason was: 'Socket has closed'. Will retry shortly
+W 2021-07-03 23:14:02,052 asyncio: Executing <Task pending name='run shard 0' coro=<GatewayShardImpl._run() running at /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/hikari/impl/shard.py:807> wait_for=<Future pending cb=[shield.<locals>._outer_done_callback() at /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/asyncio/tasks.py:903, <TaskWakeupMethWrapper object at 0x1104fca90>()] created at /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/asyncio/tasks.py:884> created at /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/asyncio/tasks.py:361> took 0.578 seconds
+W 2021-07-03 23:14:02,882 asyncio: Executing <Task pending name='Task-88' coro=<TCPConnector._resolve_host() running at /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/aiohttp/connector.py:827> wait_for=<Future pending cb=[<TaskWakeupMethWrapper object at 0x1104c3100>()] created at /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/aiohttp/resolver.py:31> cb=[shield.<locals>._inner_done_callback() at /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/asyncio/tasks.py:886] created at /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/aiohttp/connector.py:992> took 0.521 seconds
+W 2021-07-03 23:14:03,244 asyncio: Executing <Handle UVTransport._call_connection_made created at /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/hikari/impl/bot.py:654> took 0.176 seconds
+I 2021-07-03 23:14:03,614 hikari.gateway.0: received invalid session, will need to start a new session
+I 2021-07-03 23:14:03,975 hikari.gateway.0: backing off reconnecting for 7.16s
+I 2021-07-03 23:14:04,510 apscheduler.scheduler: Scheduler has been shut down
+I 2021-07-03 23:14:04,516 root: Closed database connection.
+I 2021-07-03 23:14:04,518 root: Closed aiohttp session.
+I 2021-07-03 23:14:04,792 hikari: application has successfully terminated

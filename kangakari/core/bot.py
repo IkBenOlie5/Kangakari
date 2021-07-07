@@ -3,15 +3,17 @@ from pathlib import Path
 
 import hikari
 import lightbulb
+import sake
 from aiohttp import ClientSession
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from kangakari import Config
-from kangakari.core.cache import Cache
-from kangakari.core.context import Context
 from kangakari.core.db import Database
-from kangakari.core.help import Help
+from kangakari.core.utils import Context
 from kangakari.core.utils import Embeds
+from kangakari.core.utils import Help
+from kangakari.core.utils import RedisCache
+from kangakari.core.utils import ResourceIndex
 
 
 class Bot(lightbulb.Bot):
@@ -21,15 +23,7 @@ class Bot(lightbulb.Bot):
         self._static = "./kangakari/data/static"
 
         self.version = version
-
-        self.scheduler = AsyncIOScheduler()
         self.config = Config()
-        self.db = Database(self)
-        self.prefix_cache = Cache(self)
-        self.session = ClientSession()
-        self.embeds = Embeds()
-
-        self.setup_logger()
 
         super().__init__(
             token=self.config.TOKEN,
@@ -42,6 +36,8 @@ class Bot(lightbulb.Bot):
             help_class=Help,
         )
 
+        self.setup_logger()
+
         subscriptions = {
             hikari.StartingEvent: self.on_starting,
             hikari.StartedEvent: self.on_started,
@@ -53,19 +49,32 @@ class Bot(lightbulb.Bot):
         for e, c in subscriptions.items():
             self.event_manager.subscribe(e, c)
 
+        self.scheduler = AsyncIOScheduler()
+        self.db = Database(self)
+        self.session = ClientSession()
+        self.embeds = Embeds()
+        self.redis_cache = RedisCache(
+            self, self, address=self.config.REDIS_ADDRESS, password=self.config.REDIS_PASSWORD, ssl=False
+        ).with_index_override("PREFIX", ResourceIndex.PREFIX)
+
     def get_context(self, *args, **kwargs):
         return Context(self, *args, **kwargs)
 
     def setup_logger(self):
-        self.log = logging.getLogger(self.__class__.__name__)
+        self.log = logging.getLogger("root")
+        self.log.setLevel(logging.INFO)
 
-        file_handler = logging.handlers.TimedRotatingFileHandler("kangakari.log", when="D", interval=7)
-        file_handler.setLevel(logging.INFO)
-        self.log.addHandler(file_handler)
+        trfh = logging.handlers.TimedRotatingFileHandler(
+            "./kangakari/data/logs/main.log", when="D", interval=3, encoding="utf-8", backupCount=10
+        )
+
+        ff = logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: " "%(message)s")
+        trfh.setFormatter(ff)
+        self.log.addHandler(trfh)
 
     async def on_starting(self, _: hikari.StartingEvent) -> None:
         await self.db.connect()
-        await self.prefix_cache.connect()
+        await self.redis_cache.open()
 
         for plugin in self._plugins:
             try:
@@ -84,10 +93,12 @@ class Bot(lightbulb.Bot):
         logging.info("Closed aiohttp session.")
 
     async def resolve_prefix(self, _: lightbulb.Bot, message: hikari.Message) -> str:
-        if (prefix := await self.prefix_cache.get(message.guild_id)) is None:
-            await self.prefix_cache.set(
+        try:
+            prefix = (await self.redis_cache.get_prefixes(message.guild_id))[0]
+        except sake.errors.EntryNotFound:
+            await self.redis_cache.set_prefixes(
                 message.guild_id,
-                prefix := await self.db.val("SELECT prefix FROM guilds WHERE guildid = $1", message.guild_id),
+                [prefix := await self.db.val("SELECT prefix FROM guilds WHERE guildid = $1", message.guild_id)],
             )
         return prefix
 

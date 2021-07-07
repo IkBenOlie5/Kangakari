@@ -27,7 +27,7 @@ class Help(help.HelpCommand):
                 short_help = help.get_help_text(c).split("\n")[0]
                 help_text.append(f"• `{c.name}` - {short_help}")
         help_text.append(f"\n> Use `{ctx.clean_prefix}help [command]` for more information.")
-        await self.send_paginated_help(help_text, ctx)
+        await ctx.respond_embed("\n".join(help_text))
 
     async def send_plugin_help(self, ctx, plugin):
         help_text = [

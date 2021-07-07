@@ -4,9 +4,9 @@ import lightbulb
 
 
 class Debug(lightbulb.plugins.Plugin):
-    async def handle_plugins(self, ctx: lightbulb.Context, plugins: str, action: str) -> None:
-        if plugins:
-            plugins = plugins.split(" ")
+    async def handle_plugins(self, ctx: lightbulb.Context, plugin_string: str, action: str) -> None:
+        if plugin_string:
+            plugins = plugin_string.split(" ")
         else:
             plugins = [e.split(".")[-1] for e in ctx.bot.plugins]
 
@@ -24,22 +24,22 @@ class Debug(lightbulb.plugins.Plugin):
         await ctx.respond_embed(f"{count} extension(s) {action}ed.")
 
     @lightbulb.checks.owner_only()
-    @lightbulb.commands.command(name="reload")
+    @lightbulb.commands.command(name="reload", hidden=True)
     async def reload_command(self, ctx, *, plugins=""):
         await self.handle_plugins(ctx, plugins, "reload")
 
     @lightbulb.checks.owner_only()
-    @lightbulb.commands.command(name="load")
+    @lightbulb.commands.command(name="load", hidden=True)
     async def load_command(self, ctx, *, plugins=""):
         await self.handle_plugins(ctx, plugins, "load")
 
     @lightbulb.checks.owner_only()
-    @lightbulb.commands.command(name="unload")
+    @lightbulb.commands.command(name="unload", hidden=True)
     async def unload_command(self, ctx, *, plugins=""):
         await self.handle_plugins(ctx, plugins, "unload")
 
     @lightbulb.checks.owner_only()
-    @lightbulb.commands.command(name="shutdown")
+    @lightbulb.commands.command(name="shutdown", hidden=True)
     async def shutdown_command(self, ctx):
         await ctx.respond_embed("Shutting down.")
         await ctx.bot.close(force=True)

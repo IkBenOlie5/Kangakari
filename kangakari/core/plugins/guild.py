@@ -7,12 +7,12 @@ class Guild(lightbulb.plugins.Plugin):
     @lightbulb.command(name="change_prefix")
     async def change_prefix_command(self, ctx: lightbulb.Context, prefix: str):
         await ctx.bot.db.execute("UPDATE guilds SET prefix = $1 WHERE guildid = $2", prefix, ctx.guild.id)
-        await ctx.bot.prefix_cache.set(ctx.guild.id, prefix)
+        await ctx.bot.redis_cache.set_prefixes(ctx.guild.id, [prefix])
         await ctx.respond_embed(f"Changed server prefix to `{prefix}`.")
 
     @lightbulb.command(name="current_prefix", aliases=["cp", "prefix"])
     async def current_prefix_command(self, ctx: lightbulb.Context):
-        prefix = await ctx.bot.prefix_cache.get(ctx.guild.id)
+        prefix = (await ctx.bot.redis_cache.get_prefixes(ctx.guild.id))[0]
         await ctx.respond_embed(f"The current prefix is `{prefix}`.")
 
 
