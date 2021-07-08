@@ -4,6 +4,12 @@ import sake
 
 
 class Guild(lightbulb.plugins.Plugin):
+    async def plugin_check(self, ctx: lightbulb.Context):
+        if ctx.guild_id is None:
+            await ctx.respond_embed("This command can only be executed inside servers.")
+            return False
+        return True
+
     @lightbulb.group(name="prefix", aliases=["prefixes"])
     async def prefix_group(self, ctx: lightbulb.Context):
         prefixes = await ctx.bot.redis_cache.get_prefixes(ctx.guild_id)

@@ -1,4 +1,5 @@
 import logging
+import typing as t
 from pathlib import Path
 
 import hikari
@@ -92,7 +93,9 @@ class Bot(lightbulb.Bot):
         await self.session.close()
         logging.info("Closed aiohttp session.")
 
-    async def resolve_prefix(self, _: lightbulb.Bot, message: hikari.Message) -> str:
+    async def resolve_prefix(self, _: lightbulb.Bot, message: hikari.Message) -> t.Union[t.Sequence[str], str]:
+        if message.guild_id is None:
+            return self.config.DEFAULT_PREFIX
         try:
             prefixes = await self.redis_cache.get_prefixes(message.guild_id)
         except sake.errors.EntryNotFound:
