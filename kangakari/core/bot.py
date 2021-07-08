@@ -75,7 +75,6 @@ class Bot(lightbulb.Bot):
     async def on_starting(self, _: hikari.StartingEvent) -> None:
         await self.db.connect()
         await self.redis_cache.open()
-        await self.redis_cache.clear_prefixes()
 
         for plugin in self._plugins:
             try:
