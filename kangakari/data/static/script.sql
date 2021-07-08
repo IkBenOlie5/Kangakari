@@ -1,6 +1,7 @@
-CREATE TABLE IF NOT EXISTS guilds(
-    guildid BIGINT NOT NULL PRIMARY KEY,
-    prefix TEXT DEFAULT '{}'
+CREATE TABLE IF NOT EXISTS prefixes(
+    guildid BIGINT NOT NULL,
+    prefix TEXT DEFAULT '{}',
+    PRIMARY KEY(guildid, prefix)
 );
 
 CREATE TABLE IF NOT EXISTS users (

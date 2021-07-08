@@ -20,7 +20,7 @@ class PrefixCache(redis.ResourceClient):
 
     async def clear_prefixes(self) -> None:
         client = self.get_connection(ResourceIndex.PREFIX)
-        await client.fushdb()
+        await client.flushdb()
 
     async def delete_prefixes(self, guild_id: snowflakes.Snowflakeish, /) -> None:
         client = self.get_connection(ResourceIndex.PREFIX)
@@ -33,7 +33,6 @@ class PrefixCache(redis.ResourceClient):
 
         if not data:
             raise errors.EntryNotFound(f"Prefix entry `{guild_id}` not found")
-
         return json.loads(data)
 
     async def iter_prefixes(

@@ -42,7 +42,7 @@ class Debug(lightbulb.plugins.Plugin):
     @lightbulb.commands.command(name="shutdown", hidden=True)
     async def shutdown_command(self, ctx):
         await ctx.respond_embed("Shutting down.")
-        await ctx.bot.close(force=True)
+        await ctx.bot.close()
 
 
 def load(bot: lightbulb.Bot) -> None:

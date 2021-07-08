@@ -23,6 +23,7 @@ class Embeds:
         self.plus_fields()
         self.extras()
 
+
         return self.embed
 
     def prime(self) -> None:

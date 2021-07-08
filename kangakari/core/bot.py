@@ -75,6 +75,7 @@ class Bot(lightbulb.Bot):
     async def on_starting(self, _: hikari.StartingEvent) -> None:
         await self.db.connect()
         await self.redis_cache.open()
+        await self.redis_cache.clear_prefixes()
 
         for plugin in self._plugins:
             try:
@@ -94,21 +95,22 @@ class Bot(lightbulb.Bot):
 
     async def resolve_prefix(self, _: lightbulb.Bot, message: hikari.Message) -> str:
         try:
-            prefix = (await self.redis_cache.get_prefixes(message.guild_id))[0]
+            prefixes = await self.redis_cache.get_prefixes(message.guild_id)
         except sake.errors.EntryNotFound:
+            prefixes = await self.db.column("SELECT prefix FROM prefixes WHERE guildid = $1", message.guild_id)
             await self.redis_cache.set_prefixes(
                 message.guild_id,
-                [prefix := await self.db.val("SELECT prefix FROM guilds WHERE guildid = $1", message.guild_id)],
+                prefixes,
             )
-        return prefix
+        return prefixes
 
     async def on_guild_available(self, event: hikari.GuildAvailableEvent):
         await self.db.wait_until_connected()
-        await self.db.execute("INSERT INTO guilds (guildid) VALUES ($1) ON CONFLICT DO NOTHING", event.guild_id)
+        await self.db.execute("INSERT INTO prefixes (guildid) VALUES ($1) ON CONFLICT DO NOTHING", event.guild_id)
 
     async def on_guild_leave(self, event: hikari.GuildLeaveEvent):
         await self.db.wait_until_connected()
-        await self.db.execute("DELETE FROM guilds WHERE guildid = $1", event.guild_id)
+        await self.db.execute("DELETE FROM prefixes WHERE guildid = $1", event.guild_id)
 
     async def on_guild_message_create(self, event: hikari.GuildMessageCreateEvent):
         await self.db.wait_until_connected()
