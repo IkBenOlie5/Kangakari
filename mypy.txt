@@ -1,0 +1,70 @@
+kangakari/core/utils/help.py:1: error: Skipping analyzing 'lightbulb': found module but no type hints or library stubs
+kangakari/core/utils/help.py:4: error: Class cannot subclass 'HelpCommand' (has type 'Any')
+kangakari/core/utils/help.py:26: error: Returning Any from function declared to return "SupportsLessThan"
+kangakari/core/utils/help.py:37: error: Returning Any from function declared to return "SupportsLessThan"
+kangakari/core/utils/help.py:57: error: Returning Any from function declared to return "SupportsLessThan"
+kangakari/core/plugins/info.py:3: error: Skipping analyzing 'lightbulb': found module but no type hints or library stubs
+kangakari/core/plugins/info.py:6: error: Class cannot subclass 'Plugin' (has type 'Any')
+kangakari/core/plugins/info.py:7: error: Untyped decorator makes function "ping_cmd" untyped
+kangakari/core/plugins/debug.py:3: error: Skipping analyzing 'lightbulb': found module but no type hints or library stubs
+kangakari/core/plugins/debug.py:6: error: Class cannot subclass 'Plugin' (has type 'Any')
+kangakari/core/plugins/debug.py:26: error: Untyped decorator makes function "reload_command" untyped
+kangakari/core/plugins/debug.py:27: error: Untyped decorator makes function "reload_command" untyped
+kangakari/core/plugins/debug.py:28: error: Function is missing a return type annotation
+kangakari/core/plugins/debug.py:31: error: Untyped decorator makes function "load_command" untyped
+kangakari/core/plugins/debug.py:32: error: Untyped decorator makes function "load_command" untyped
+kangakari/core/plugins/debug.py:33: error: Function is missing a return type annotation
+kangakari/core/plugins/debug.py:36: error: Untyped decorator makes function "unload_command" untyped
+kangakari/core/plugins/debug.py:37: error: Untyped decorator makes function "unload_command" untyped
+kangakari/core/plugins/debug.py:38: error: Function is missing a return type annotation
+kangakari/core/plugins/debug.py:41: error: Untyped decorator makes function "shutdown_command" untyped
+kangakari/core/plugins/debug.py:42: error: Untyped decorator makes function "shutdown_command" untyped
+kangakari/core/plugins/debug.py:43: error: Function is missing a return type annotation
+kangakari/core/db/db.py:8: error: Skipping analyzing 'asyncpg': found module but no type hints or library stubs
+kangakari/core/db/db.py:8: note: See https://mypy.readthedocs.io/en/latest/running_mypy.html#missing-imports
+kangakari/core/db/db.py:9: error: Skipping analyzing 'lightbulb': found module but no type hints or library stubs
+kangakari/core/db/db.py:85: error: Returning Any from function declared to return "List[Any]"
+kangakari/core/db/db.py:89: error: Returning Any from function declared to return "List[Any]"
+kangakari/core/utils/embeds.py:5: error: Skipping analyzing 'lightbulb': found module but no type hints or library stubs
+kangakari/core/utils/context.py:4: error: Skipping analyzing 'lightbulb': found module but no type hints or library stubs
+kangakari/core/utils/context.py:7: error: Class cannot subclass 'Context' (has type 'Any')
+kangakari/core/utils/context.py:10: error: Returning Any from function declared to return "Message"
+kangakari/core/utils/cache.py:18: error: Return type "Sequence[kangakari.core.utils.cache.ResourceIndex]" of "index" incompatible with return type "Sequence[sake.redis.ResourceIndex]" in supertype "ResourceClient"
+kangakari/core/utils/cache.py:22: error: Argument 1 to "get_connection" of "ResourceClient" has incompatible type "kangakari.core.utils.cache.ResourceIndex"; expected "sake.redis.ResourceIndex"
+kangakari/core/utils/cache.py:26: error: Argument 1 to "get_connection" of "ResourceClient" has incompatible type "kangakari.core.utils.cache.ResourceIndex"; expected "sake.redis.ResourceIndex"
+kangakari/core/utils/cache.py:31: error: Argument 1 to "get_connection" of "ResourceClient" has incompatible type "kangakari.core.utils.cache.ResourceIndex"; expected "sake.redis.ResourceIndex"
+kangakari/core/utils/cache.py:36: error: Returning Any from function declared to return "Sequence[str]"
+kangakari/core/utils/cache.py:36: error: Argument 1 to "loads" has incompatible type "Dict[str, Any]"; expected "Union[str, bytes]"
+kangakari/core/utils/cache.py:39: error: Argument 2 to "Iterator" has incompatible type "kangakari.core.utils.cache.ResourceIndex"; expected "sake.redis.ResourceIndex"
+kangakari/core/utils/cache.py:39: error: Argument 3 to "Iterator" has incompatible type "Callable[[Union[str, bytes], DefaultNamedArg(Optional[Type[JSONDecoder]], 'cls'), DefaultNamedArg(Optional[Callable[[Dict[Any, Any]], Any]], 'object_hook'), DefaultNamedArg(Optional[Callable[[str], Any]], 'parse_float'), DefaultNamedArg(Optional[Callable[[str], Any]], 'parse_int'), DefaultNamedArg(Optional[Callable[[str], Any]], 'parse_constant'), DefaultNamedArg(Optional[Callable[[List[Tuple[Any, Any]]], Any]], 'object_pairs_hook'), KwArg(Any)], Any]"; expected "Callable[[Dict[str, Any]], Sequence[str]]"
+kangakari/core/utils/cache.py:42: error: Argument 1 to "get_connection" of "ResourceClient" has incompatible type "kangakari.core.utils.cache.ResourceIndex"; expected "sake.redis.ResourceIndex"
+kangakari/core/utils/cache.py:44: error: Argument 2 to "set" of "AioRedisFacade" has incompatible type "str"; expected "Dict[str, Any]"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "GuildCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "EmojiCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "GuildChannelCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "IntegrationCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "InviteCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "MemberCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "MessageCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "PresenceCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "RoleCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "UserCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "_MeCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "VoiceStateCache" is incompatible with definition in base class "PrefixCache"
+kangakari/core/utils/cache.py:47: error: Definition of "index" in base class "_Reference" is incompatible with definition in base class "PrefixCache"
+kangakari/core/plugins/guild.py:2: error: Skipping analyzing 'lightbulb': found module but no type hints or library stubs
+kangakari/core/plugins/guild.py:6: error: Class cannot subclass 'Plugin' (has type 'Any')
+kangakari/core/plugins/guild.py:13: error: Untyped decorator makes function "prefix_group" untyped
+kangakari/core/plugins/guild.py:19: error: Untyped decorator makes function "prefix_add_command" untyped
+kangakari/core/plugins/guild.py:20: error: Untyped decorator makes function "prefix_add_command" untyped
+kangakari/core/plugins/guild.py:27: error: Returning Any from function declared to return "None"
+kangakari/core/plugins/guild.py:33: error: Untyped decorator makes function "prefix_remove_command" untyped
+kangakari/core/plugins/guild.py:34: error: Untyped decorator makes function "prefix_remove_command" untyped
+kangakari/core/plugins/guild.py:41: error: Returning Any from function declared to return "None"
+kangakari/core/bot.py:6: error: Skipping analyzing 'lightbulb': found module but no type hints or library stubs
+kangakari/core/bot.py:9: error: Skipping analyzing 'apscheduler.schedulers.asyncio': found module but no type hints or library stubs
+kangakari/core/bot.py:20: error: Class cannot subclass 'Bot' (has type 'Any')
+kangakari/core/bot.py:59: error: Argument 1 to "with_index_override" of "ResourceClient" has incompatible type "str"; expected "ResourceIndex"
+kangakari/core/bot.py:68: error: Module has no attribute "handlers"; maybe "Handler"?
+kangakari/core/bot.py:98: error: Returning Any from function declared to return "Union[Sequence[str], str]"
+Found 68 errors in 9 files (checked 15 source files)

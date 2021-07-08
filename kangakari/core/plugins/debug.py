@@ -25,22 +25,22 @@ class Debug(lightbulb.plugins.Plugin):
 
     @lightbulb.checks.owner_only()
     @lightbulb.commands.command(name="reload", hidden=True)
-    async def reload_command(self, ctx, *, plugins=""):
+    async def reload_command(self, ctx: lightbulb.Context, *, plugins: str = ""):
         await self.handle_plugins(ctx, plugins, "reload")
 
     @lightbulb.checks.owner_only()
     @lightbulb.commands.command(name="load", hidden=True)
-    async def load_command(self, ctx, *, plugins=""):
+    async def load_command(self, ctx: lightbulb.Context, *, plugins: str = ""):
         await self.handle_plugins(ctx, plugins, "load")
 
     @lightbulb.checks.owner_only()
     @lightbulb.commands.command(name="unload", hidden=True)
-    async def unload_command(self, ctx, *, plugins=""):
+    async def unload_command(self, ctx: lightbulb.Context, *, plugins: str = ""):
         await self.handle_plugins(ctx, plugins, "unload")
 
     @lightbulb.checks.owner_only()
     @lightbulb.commands.command(name="shutdown", hidden=True)
-    async def shutdown_command(self, ctx):
+    async def shutdown_command(self, ctx: lightbulb.Context):
         await ctx.respond_embed("Shutting down.")
         await ctx.bot.close()
 

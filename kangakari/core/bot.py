@@ -58,10 +58,10 @@ class Bot(lightbulb.Bot):
             self, self, address=self.config.REDIS_ADDRESS, password=self.config.REDIS_PASSWORD, ssl=False
         ).with_index_override("PREFIX", ResourceIndex.PREFIX)
 
-    def get_context(self, *args, **kwargs):
+    def get_context(self, *args: t.Any, **kwargs: t.Any) -> Context:
         return Context(self, *args, **kwargs)
 
-    def setup_logger(self):
+    def setup_logger(self) -> None:
         self.log = logging.getLogger("root")
         self.log.setLevel(logging.INFO)
 
@@ -106,14 +106,14 @@ class Bot(lightbulb.Bot):
             )
         return prefixes
 
-    async def on_guild_available(self, event: hikari.GuildAvailableEvent):
+    async def on_guild_available(self, event: hikari.GuildAvailableEvent) -> None:
         await self.db.wait_until_connected()
         await self.db.execute("INSERT INTO prefixes (guildid) VALUES ($1) ON CONFLICT DO NOTHING", event.guild_id)
 
-    async def on_guild_leave(self, event: hikari.GuildLeaveEvent):
+    async def on_guild_leave(self, event: hikari.GuildLeaveEvent) -> None:
         await self.db.wait_until_connected()
         await self.db.execute("DELETE FROM prefixes WHERE guildid = $1", event.guild_id)
 
-    async def on_guild_message_create(self, event: hikari.GuildMessageCreateEvent):
+    async def on_guild_message_create(self, event: hikari.GuildMessageCreateEvent) -> None:
         await self.db.wait_until_connected()
         await self.db.execute("INSERT INTO users (userid) VALUES ($1) ON CONFLICT DO NOTHING", event.author_id)

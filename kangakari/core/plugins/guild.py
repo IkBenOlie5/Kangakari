@@ -4,21 +4,21 @@ import sake
 
 
 class Guild(lightbulb.plugins.Plugin):
-    async def plugin_check(self, ctx: lightbulb.Context):
+    async def plugin_check(self, ctx: lightbulb.Context) -> bool:
         if ctx.guild_id is None:
             await ctx.respond_embed("This command can only be executed inside servers.")
             return False
         return True
 
     @lightbulb.group(name="prefix", aliases=["prefixes"])
-    async def prefix_group(self, ctx: lightbulb.Context):
+    async def prefix_group(self, ctx: lightbulb.Context) -> None:
         prefixes = await ctx.bot.redis_cache.get_prefixes(ctx.guild_id)
         prefixes.append("@mention")
         await ctx.respond_embed(f"The current prefixes are: ```\n" + "\n".join(prefixes) + "```")
 
     @lightbulb.has_guild_permissions(hikari.Permissions.MANAGE_GUILD)
     @prefix_group.command(name="add")
-    async def prefix_add_command(self, ctx: lightbulb.Context, *, prefix: str):
+    async def prefix_add_command(self, ctx: lightbulb.Context, *, prefix: str) -> None:
         try:
             prefixes = await ctx.bot.redis_cache.get_prefixes(ctx.guild_id)
         except sake.errors.EntryNotFound:
@@ -32,7 +32,7 @@ class Guild(lightbulb.plugins.Plugin):
 
     @lightbulb.has_guild_permissions(hikari.Permissions.MANAGE_GUILD)
     @prefix_group.command(name="remove", aliases=["delete"])
-    async def prefix_remove_command(self, ctx: lightbulb.Context, *, prefix: str):
+    async def prefix_remove_command(self, ctx: lightbulb.Context, *, prefix: str) -> None:
         try:
             prefixes = await ctx.bot.redis_cache.get_prefixes(ctx.guild_id)
         except sake.errors.EntryNotFound:
@@ -45,9 +45,9 @@ class Guild(lightbulb.plugins.Plugin):
         await ctx.respond_embed(f"Succesfully removed `{prefix}`.")
 
 
-def load(bot: lightbulb.Bot):
+def load(bot: lightbulb.Bot) -> None:
     bot.add_plugin(Guild())
 
 
-def unload(bot: lightbulb.Bot):
+def unload(bot: lightbulb.Bot) -> None:
     bot.remove_plugin("Guild")

@@ -4,7 +4,7 @@ from kangakari import Bot
 from kangakari import __version__
 
 
-def main():
+def main() -> None:
     if os.name != "nt":
         import uvloop
 
