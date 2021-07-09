@@ -12,7 +12,9 @@ class NSFW(lightbulb.Plugin):
                 post = (await resp.json(content_type=None))[0]
             except IndexError:
                 return await ctx.respond_embed(f"No post was found with tag(s) `{tags}`.")
-        embed = ctx.bot.embeds.build(ctx=ctx, image=post[0]["file_url"])
+        embed = ctx.bot.embeds.build(
+            ctx=ctx, description=f"[Original Post]({post['file_url']})", image=post["file_url"]
+        )  # TODO: this doesn't work if the link is for a video
         await ctx.respond(embed=embed)
 
 

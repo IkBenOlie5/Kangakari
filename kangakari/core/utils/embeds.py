@@ -12,8 +12,8 @@ class Embeds:
         self.title: t.Optional[str] = kwargs.get("title")
         self.desc: t.Optional[str] = kwargs.get("description")
         self.footer: t.Optional[str] = kwargs.get("footer")
-        self.header: t.Optional[str] = kwargs.get("header")
-        self.header_icon: t.Any = kwargs.get("header_icon")
+        self.author: t.Optional[str] = kwargs.get("author")
+        self.author_icon: t.Any = kwargs.get("author_icon")
         self.thumbnail: t.Any = kwargs.get("thumbnail")
         self.image: t.Any = kwargs.get("image")
         self.color: t.Any = kwargs.get("color")
@@ -41,7 +41,7 @@ class Embeds:
     def extras(self) -> None:
         self.embed.set_thumbnail(self.thumbnail)
 
-        self.embed.set_author(name=self.header or "Kangakari", icon=self.header_icon)
+        self.embed.set_author(name=self.author or "Kangakari", icon=self.author_icon)
 
         self.embed.set_footer(
             text=self.footer or f"Invoked by: {self._ctx.author.username}",
