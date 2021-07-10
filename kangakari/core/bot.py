@@ -65,13 +65,13 @@ class Bot(lightbulb.Bot):
         self.log = logging.getLogger("root")
         self.log.setLevel(logging.INFO)
 
-        trfh = logging.handlers.TimedRotatingFileHandler(
+        file_handler = logging.handlers.TimedRotatingFileHandler(  # type: ignore
             "./kangakari/data/logs/main.log", when="D", interval=3, encoding="utf-8", backupCount=10
         )
 
-        ff = logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: " "%(message)s")
-        trfh.setFormatter(ff)
-        self.log.addHandler(trfh)
+        formatter = logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: " "%(message)s")
+        file_handler.setFormatter(formatter)
+        self.log.addHandler(file_handler)
 
     async def on_starting(self, _: hikari.StartingEvent) -> None:
         await self.db.connect()
