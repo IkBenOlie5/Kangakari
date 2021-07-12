@@ -56,7 +56,9 @@ class Bot(lightbulb.Bot):
         self.embeds = Embeds()
         self.redis_cache = RedisCache(
             self, self, address=self.config.REDIS_ADDRESS, password=self.config.REDIS_PASSWORD, ssl=False
-        ).with_index_override("PREFIX", ResourceIndex.PREFIX)
+        ).with_index_override(
+            "PREFIX", ResourceIndex.PREFIX  # type: ignore
+        )
 
     def get_context(self, *args: t.Any, **kwargs: t.Any) -> Context:
         return Context(self, *args, **kwargs)
