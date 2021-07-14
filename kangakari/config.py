@@ -31,8 +31,9 @@ class Config:
         value: t.Optional[str] = environ.get(key)
         if value is None:
             raise ValueError(f"Key {key} not in environment variables.")
-        self._cache[key] = value
-        return self.resolve_value(value)
+        resolved = self.resolve_value(value)
+        self._cache[key] = resolved
+        return resolved
 
     def __getattr__(self, key: str) -> t.Any:
         return self._get(key)
