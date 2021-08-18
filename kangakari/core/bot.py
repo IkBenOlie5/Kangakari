@@ -13,8 +13,10 @@ from kangakari.core.db import Database
 from kangakari.core.utils import Context
 from kangakari.core.utils import Embeds
 from kangakari.core.utils import Help
-from kangakari.core.utils import RedisCache
-from kangakari.core.utils import ResourceIndex
+
+
+class RedisCache(sake.redis.PrefixCache, sake.redis.RedisCache):
+    pass
 
 
 class Bot(lightbulb.Bot):
@@ -52,12 +54,9 @@ class Bot(lightbulb.Bot):
 
         self.scheduler = AsyncIOScheduler()
         self.db = Database(self)
-        self.session = ClientSession()
         self.embeds = Embeds()
         self.redis_cache = RedisCache(
             self, self, address=self.config.REDIS_ADDRESS, password=self.config.REDIS_PASSWORD, ssl=False
-        ).with_index_override(
-            "PREFIX", ResourceIndex.PREFIX  # type: ignore
         )
 
     def get_context(self, *args: t.Any, **kwargs: t.Any) -> Context:
@@ -71,11 +70,12 @@ class Bot(lightbulb.Bot):
             "./kangakari/data/logs/main.log", when="D", interval=3, encoding="utf-8", backupCount=10
         )
 
-        formatter = logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: " "%(message)s")
+        formatter = logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: %(message)s")
         file_handler.setFormatter(formatter)
         self.log.addHandler(file_handler)
 
     async def on_starting(self, _: hikari.StartingEvent) -> None:
+        self.session = ClientSession()
         await self.db.connect()
         await self.redis_cache.open()
 

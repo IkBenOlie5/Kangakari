@@ -1,0 +1,29 @@
+W 2021-08-14 07:45:31,649 py.warnings: /Users/oli4/Desktop/programming/python/Kangakari/kangakari/core/bot.py:55: DeprecationWarning: The object should be created within an async function
+  self.session = ClientSession()
+
+W 2021-08-14 07:45:31,650 py.warnings: /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/aiohttp/connector.py:756: DeprecationWarning: The object should be created within an async function
+  super().__init__(
+
+W 2021-08-14 07:45:31,650 py.warnings: /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/aiohttp/connector.py:767: DeprecationWarning: The object should be created within an async function
+  resolver = DefaultResolver(loop=self._loop)
+
+W 2021-08-14 07:45:31,651 py.warnings: /Library/Frameworks/Python.framework/Versions/3.9/lib/python3.9/site-packages/aiohttp/cookiejar.py:64: DeprecationWarning: The object should be created within an async function
+  super().__init__(loop=loop)
+
+I 2021-08-14 07:45:32,280 root: Connected to database.
+I 2021-08-14 07:45:32,297 root: Synchronised database.
+I 2021-08-14 07:45:32,298 root: Plugin 'nsfw' has been loaded.
+I 2021-08-14 07:45:32,300 root: Plugin 'handler' has been loaded.
+I 2021-08-14 07:45:32,303 root: Plugin 'moderation' has been loaded.
+I 2021-08-14 07:45:32,306 root: Plugin 'debug' has been loaded.
+I 2021-08-14 07:45:32,307 root: Plugin 'info' has been loaded.
+I 2021-08-14 07:45:32,309 root: Plugin 'guild' has been loaded.
+I 2021-08-14 07:45:32,309 hikari.bot: you can start 998 sessions before the next window which starts at 2021-08-15 07:43:20.823700+02:00; planning to start 1 session... 
+I 2021-08-14 07:45:32,634 hikari.gateway.0: shard is ready: 1 guilds, testing-kangaroo#2385 (829673220554096680), session 'f8df5ca68e3b8b74cb9e57a61c53947c' on v8 gateway
+I 2021-08-14 07:45:32,664 apscheduler.scheduler: Scheduler started
+I 2021-08-14 07:45:32,665 hikari.bot: started successfully in approx 1.00 seconds
+I 2021-08-14 07:46:08,465 apscheduler.scheduler: Scheduler has been shut down
+I 2021-08-14 07:46:08,531 root: Closed database connection.
+I 2021-08-14 07:46:08,531 root: Closed aiohttp session.
+I 2021-08-14 07:46:08,787 hikari.gateway.0: shard has disconnected and shut down normally
+I 2021-08-14 07:46:08,794 hikari.bot: successfully terminated

@@ -4,8 +4,11 @@ import lightbulb
 
 
 class Info(lightbulb.Plugin):
+    """Commands to get info on the bot and other discord users."""
+
     @lightbulb.command(name="ping")
     async def ping_cmd(self, ctx: lightbulb.Context) -> None:
+        """Get the bot ping."""
         start = time.time()
         msg = await ctx.respond_embed("uwu")
         end = time.time()

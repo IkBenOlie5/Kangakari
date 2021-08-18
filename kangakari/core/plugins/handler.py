@@ -2,6 +2,8 @@ import lightbulb
 
 
 class Handler(lightbulb.Plugin):
+    """Error handler."""
+
     @lightbulb.listener(event_type=lightbulb.CommandErrorEvent)
     async def on_command_error(self, event: lightbulb.CommandErrorEvent) -> None:
         if isinstance(event.exception, (lightbulb.errors.CommandNotFound)):

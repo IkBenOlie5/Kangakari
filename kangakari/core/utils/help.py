@@ -1,4 +1,5 @@
 import typing as t
+from operator import attrgetter
 
 import lightbulb
 
@@ -33,7 +34,7 @@ class Help(lightbulb.help.HelpCommand):
             if not commands:
                 continue
             help_text.append(f"> **{plugin}**")
-            for c in sorted(commands, key=lambda c: c.name):
+            for c in sorted(commands, key=attrgetter("name")):
                 short_help = lightbulb.help.get_help_text(c).split("\n")[0]
                 help_text.append(f"• `{c.name}` - {short_help}")
         help_text.append(f"\n> Use `{ctx.clean_prefix}help [command]` for more information.")
@@ -46,7 +47,7 @@ class Help(lightbulb.help.HelpCommand):
             + "\n\nCommands:"
             + "\n```\n"
             + (
-                "\n".join(f"{c.name}" for c in sorted(plugin._commands.values(), key=lambda c: c.name))
+                "\n".join(f"{c.name}" for c in sorted(plugin._commands.values(), key=attrgetter("name")))
                 or "No commands in the plugin."
             )
             + "```"
@@ -71,7 +72,7 @@ class Help(lightbulb.help.HelpCommand):
                 (
                     "\nSubcommands:"
                     + "\n```\n"
-                    + "\n".join(c.name for c in sorted(group.subcommands, key=lambda c: c.name))
+                    + "\n".join(c.name for c in sorted(group.subcommands, key=attrgetter("name")))
                     + "```"
                 )
                 if group.subcommands

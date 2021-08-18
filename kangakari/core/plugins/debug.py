@@ -3,8 +3,8 @@ import logging
 import lightbulb
 
 
-class Debug(lightbulb.plugins.Plugin):
-    """Utility commands only accesible by the owner."""
+class Debug(lightbulb.Plugin):
+    """Utility commands only accessible by the owner."""
 
     async def handle_plugins(self, ctx: lightbulb.Context, plugin_string: str, action: str) -> None:
         if plugin_string:
@@ -27,25 +27,25 @@ class Debug(lightbulb.plugins.Plugin):
 
     @lightbulb.checks.owner_only()
     @lightbulb.commands.command(name="reload", hidden=True)
-    async def reload_command(self, ctx: lightbulb.Context, *, plugins: str = ""):
+    async def reload_command(self, ctx: lightbulb.Context, *, plugins: str = "") -> None:
         """Reload cogs."""
         await self.handle_plugins(ctx, plugins, "reload")
 
     @lightbulb.checks.owner_only()
     @lightbulb.commands.command(name="load", hidden=True)
-    async def load_command(self, ctx: lightbulb.Context, *, plugins: str = ""):
+    async def load_command(self, ctx: lightbulb.Context, *, plugins: str = "") -> None:
         """Load cogs."""
         await self.handle_plugins(ctx, plugins, "load")
 
     @lightbulb.checks.owner_only()
     @lightbulb.commands.command(name="unload", hidden=True)
-    async def unload_command(self, ctx: lightbulb.Context, *, plugins: str = ""):
+    async def unload_command(self, ctx: lightbulb.Context, *, plugins: str = "") -> None:
         """Unload cogs."""
         await self.handle_plugins(ctx, plugins, "unload")
 
     @lightbulb.checks.owner_only()
     @lightbulb.commands.command(name="shutdown", hidden=True)
-    async def shutdown_command(self, ctx: lightbulb.Context):
+    async def shutdown_command(self, ctx: lightbulb.Context) -> None:
         """Shut the bot down."""
         await ctx.respond_embed("Shutting down.")
         await ctx.bot.close()
