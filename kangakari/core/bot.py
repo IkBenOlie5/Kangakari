@@ -117,5 +117,6 @@ class Bot(lightbulb.Bot):
         await self.db.execute("DELETE FROM prefixes WHERE guildid = $1", event.guild_id)
 
     async def on_guild_message_create(self, event: hikari.GuildMessageCreateEvent) -> None:
-        await self.db.wait_until_connected()
-        await self.db.execute("INSERT INTO users (userid) VALUES ($1) ON CONFLICT DO NOTHING", event.author_id)
+        """await self.db.wait_until_connected()
+        if not event.author_id == self.me.id:
+            await self.db.execute("INSERT INTO users (userid) VALUES ($1) ON CONFLICT DO NOTHING", event.author_id)"""

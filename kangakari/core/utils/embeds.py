@@ -6,9 +6,9 @@ import lightbulb
 
 
 class Embeds:
-    def build(self, ctx, **kwargs: t.Any) -> hikari.Embed:
+    def build(self, ctx: lightbulb.Context, **kwargs: t.Any) -> hikari.Embed:
         self._ctx: lightbulb.Context = ctx
-        self.fields: t.Optional[list[tuple[str, str, bool]]] = kwargs.get("fields")
+        self.fields: t.Optional[t.Sequence[t.Tuple[str, str, bool]]] = kwargs.get("fields")
         self.title: t.Optional[str] = kwargs.get("title")
         self.desc: t.Optional[str] = kwargs.get("description")
         self.footer: t.Optional[str] = kwargs.get("footer")

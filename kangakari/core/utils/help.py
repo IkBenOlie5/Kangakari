@@ -59,7 +59,7 @@ class Help(lightbulb.help.HelpCommand):
             + (lightbulb.help.get_help_text(cmd) or "No help text provided.")
             + "\n\nUsage:"
             + f"\n```{ctx.clean_prefix}{lightbulb.help.get_command_signature(cmd)}```"
-            + f"\nRunnable by you? `{'yes' if await self.check_runnable(ctx, cmd) else 'no'}`"
+            + f"\nRunnable by you? `{await self.check_runnable(ctx, cmd)}`"
         )
 
     async def send_group_help(self, ctx: lightbulb.Context, group: lightbulb.Group) -> None:
@@ -78,5 +78,5 @@ class Help(lightbulb.help.HelpCommand):
                 if group.subcommands
                 else "No subcommands in the group."
             )
-            + f"\nRunnable by you? `{'yes' if await self.check_runnable(ctx, group) else 'no'}`"
+            + f"\nRunnable by you? `{await self.check_runnable(ctx, group)}`"
         )

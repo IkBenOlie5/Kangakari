@@ -49,7 +49,7 @@ class Moderation(lightbulb.Plugin):
             await ctx.respond_embed("You can only bulk delete messages that are under 14 days old.")
 
     @lightbulb.has_guild_permissions(hikari.Permissions.MANAGE_MESSAGES)
-    @lightbulb.command(name="clear_channel", aliases=["cc"])
+    @lightbulb.command(name="clear_channel", aliases=["clearchannel", "cc"])
     async def clear_channel_command(
         self, ctx: lightbulb.Context, channel: t.Optional[hikari.GuildTextChannel]
     ) -> None:
