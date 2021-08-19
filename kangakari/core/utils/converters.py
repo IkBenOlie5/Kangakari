@@ -12,13 +12,14 @@ TIMEDELTA_REGEX = re.compile(
 
 async def timezone_converter(arg: lightbulb.converters.WrappedArg) -> datetime.tzinfo:
     try:
-        return pytz.timezone(str(arg))
+        return pytz.timezone(arg.data)
     except pytz.UnknownTimeZoneError:
         raise lightbulb.errors.ConverterFailure
 
 
 async def timedelta_converter(arg: lightbulb.converters.WrappedArg) -> datetime.timedelta:
-    parts = TIMEDELTA_REGEX.match(str(arg))
+    lightbulb.utils.get()
+    parts = TIMEDELTA_REGEX.match(arg.data)
     if parts is None:
         raise lightbulb.errors.ConverterFailure
     parts = parts.groupdict()
@@ -29,3 +30,11 @@ async def timedelta_converter(arg: lightbulb.converters.WrappedArg) -> datetime.
         minutes=float(parts["minutes"]) if parts["minutes"] else 0,
         seconds=float(parts["seconds"]) if parts["seconds"] else 0,
     )
+
+
+async def command_converter(arg: lightbulb.converters.WrappedArg) -> lightbulb.Command:
+    command = arg.context.bot.get_command(arg.data)
+    if command is None:
+        raise lightbulb.errors.ConverterFailure
+
+    return command

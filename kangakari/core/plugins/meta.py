@@ -1,4 +1,6 @@
 import datetime
+import inspect
+import textwrap
 import time
 import typing as t
 
@@ -6,12 +8,18 @@ import hikari
 import lightbulb
 from pytz import utc
 
+from kangakari.core.utils import command_converter
 from kangakari.core.utils import timedelta_converter
 from kangakari.core.utils import timezone_converter
 
 
 class Meta(lightbulb.Plugin):
     """Utility commands."""
+
+    @lightbulb.command(name="source", aliases=["src"])
+    async def source_command(self, ctx: lightbulb.Context, command: command_converter) -> None:
+        code = textwrap.dedent((inspect.getsource(command.callback))).replace("\x60", "\u02CB")
+        await ctx.respond_embed(f"```py\n{code}```")
 
     @lightbulb.command(name="time_in", aliases=["timein", "ti", "time"])
     async def time_in_command(
