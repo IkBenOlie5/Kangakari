@@ -18,6 +18,7 @@ class Meta(lightbulb.Plugin):
 
     @lightbulb.command(name="source", aliases=["src"])
     async def source_command(self, ctx: lightbulb.Context, command: command_converter) -> None:
+        """Get the code of a command."""
         code = textwrap.dedent((inspect.getsource(command.callback))).replace("\x60", "\u02CB")
         await ctx.respond_embed(f"```py\n{code}```")
 
@@ -25,6 +26,7 @@ class Meta(lightbulb.Plugin):
     async def time_in_command(
         self, ctx: lightbulb.Context, timedelta: timedelta_converter, timezone: timezone_converter = utc
     ) -> None:
+        """Get the time."""
         unix = int(
             (datetime.datetime.utcnow() + timedelta + timezone.utcoffset(datetime.datetime.utcnow())).timestamp()
         )

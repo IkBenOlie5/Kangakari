@@ -1,5 +1,6 @@
 import hikari
 import lightbulb
+import sake
 
 
 class Guild(lightbulb.plugins.Plugin):
@@ -14,7 +15,10 @@ class Guild(lightbulb.plugins.Plugin):
     @lightbulb.group(name="prefix", aliases=["prefixes"])
     async def prefix_group(self, ctx: lightbulb.Context) -> None:
         """The prefixes you currently have."""
-        prefixes = await ctx.bot.redis_cache.get_prefixes(ctx.guild_id)
+        try:
+            prefixes = await ctx.bot.redis_cache.get_prefixes(ctx.guild_id)
+        except sake.errors.EntryNotFound:
+            prefixes = []
         prefixes.append("@mention (can't be removed)")
         await ctx.respond_embed("The current prefixes are: ```\n" + "\n".join(prefixes) + "```")
 
@@ -24,7 +28,7 @@ class Guild(lightbulb.plugins.Plugin):
         """Add a prefix to your guild."""
         await ctx.bot.redis_cache.add_prefixes(ctx.guild_id, prefix)
         await ctx.bot.db.execute(
-            "INSERT INTO prefixes (guildid, prefix) VALUES ($1, $2) ON CONFLICT DO NOTHING", ctx.guild_id, prefix
+            "UPDATE guilds SET prefixes = array_append(prefixes, $1) WHERE guildid = $2", prefix, ctx.guild_id
         )
         await ctx.respond_embed(f"Successfully added `{prefix}`.")
 
@@ -33,7 +37,9 @@ class Guild(lightbulb.plugins.Plugin):
     async def prefix_remove_command(self, ctx: lightbulb.Context, *, prefix: str) -> None:
         """Remove a prefix from your guild."""
         await ctx.bot.redis_cache.delete_prefixes(ctx.guild_id, prefix)
-        await ctx.bot.db.execute("DELETE FROM prefixes WHERE guildid = $1 AND prefix = $2", ctx.guild_id, prefix)
+        await ctx.bot.db.execute(
+            "UPDATE guilds SET prefixes = array_remove(prefixes, $1) WHERE guildid = $2", prefix, ctx.guild_id
+        )
         await ctx.respond_embed(f"Successfully removed `{prefix}`.")
 
 

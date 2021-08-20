@@ -91,7 +91,7 @@ class Database:
     @acquire
     async def execute_script(self, path: str, *args: t.Any, _cxn: asyncpg.Connection) -> None:
         async with aiofiles.open(path, "r") as script:
-            await _cxn.execute((await script.read()).format(*args))
+            await _cxn.execute((await script.read()) % args)
 
 
 __all__: t.Sequence[str] = ["Database"]
