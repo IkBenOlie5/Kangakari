@@ -101,7 +101,7 @@ class Bot(lightbulb.Bot):
         try:
             prefixes = await self.redis_cache.get_prefixes(message.guild_id)
         except sake.errors.EntryNotFound:
-            prefixes = await self.db.val("SELECT prefixes FROM guilds WHERE guildid = $1", message.guild_id)
+            prefixes = await self.db.val("SELECT prefixes FROM guilds WHERE guild_id = $1", message.guild_id)
             await self.redis_cache.set_prefixes(
                 message.guild_id,
                 prefixes,
@@ -110,13 +110,13 @@ class Bot(lightbulb.Bot):
 
     async def on_guild_available(self, event: hikari.GuildAvailableEvent) -> None:
         await self.db.wait_until_connected()
-        await self.db.execute("INSERT INTO guilds (guildid) VALUES ($1) ON CONFLICT DO NOTHING", event.guild_id)
+        await self.db.execute("INSERT INTO guilds (guild_id) VALUES ($1) ON CONFLICT DO NOTHING", event.guild_id)
 
     async def on_guild_leave(self, event: hikari.GuildLeaveEvent) -> None:
         await self.db.wait_until_connected()
-        await self.db.execute("DELETE FROM guilds WHERE guildid = $1", event.guild_id)
+        await self.db.execute("DELETE FROM guilds WHERE guild_id = $1", event.guild_id)
 
     async def on_guild_message_create(self, event: hikari.GuildMessageCreateEvent) -> None:
-        """await self.db.wait_until_connected()
-        if not event.author_id == self.me.id:
-            await self.db.execute("INSERT INTO users (userid) VALUES ($1) ON CONFLICT DO NOTHING", event.author_id)"""
+        await self.db.wait_until_connected()
+        """if not event.author_id == self.me.id:
+            await self.db.execute("INSERT INTO users (user_id) VALUES ($1) ON CONFLICT DO NOTHING", event.author_id)"""

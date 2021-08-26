@@ -13,9 +13,13 @@ class Handler(lightbulb.Plugin):
             await event.context.respond_embed(text)
         elif isinstance(event.exception, lightbulb.errors.NotEnoughArguments):
             text = (
-                "The command `{event.command.qualified_name}` misses the argument(s)"
+                f"The command `{event.command.qualified_name}` misses the argument(s): "
                 + f"`{' | '.join(event.exception.missing_args)}`."
             )
+            await event.context.respond_embed(text)
+        elif isinstance(event.exception, lightbulb.errors.ConverterFailure):
+            argument = event.exception.text.split(" ")[-1]
+            text = f"Converter failed for argument: `{argument}`."
             await event.context.respond_embed(text)
         else:
             await event.context.respond_embed("I have errored, and I cannot get up.")

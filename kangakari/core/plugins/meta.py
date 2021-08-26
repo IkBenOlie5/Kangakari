@@ -1,16 +1,13 @@
-import datetime
 import inspect
 import textwrap
 import time
 import typing as t
+from platform import python_version
 
 import hikari
 import lightbulb
-from pytz import utc
 
 from kangakari.core.utils import command_converter
-from kangakari.core.utils import timedelta_converter
-from kangakari.core.utils import timezone_converter
 
 
 class Meta(lightbulb.Plugin):
@@ -21,16 +18,6 @@ class Meta(lightbulb.Plugin):
         """Get the code of a command."""
         code = textwrap.dedent((inspect.getsource(command.callback))).replace("\x60", "\u02CB")
         await ctx.respond_embed(f"```py\n{code}```")
-
-    @lightbulb.command(name="time_in", aliases=["timein", "ti", "time"])
-    async def time_in_command(
-        self, ctx: lightbulb.Context, timedelta: timedelta_converter, timezone: timezone_converter = utc
-    ) -> None:
-        """Get the time."""
-        unix = int(
-            (datetime.datetime.utcnow() + timedelta + timezone.utcoffset(datetime.datetime.utcnow())).timestamp()
-        )
-        await ctx.respond_embed(f"It will be <t:{unix}:f>.")
 
     @lightbulb.command(name="ping")
     async def ping_command(self, ctx: lightbulb.Context) -> None:
@@ -122,7 +109,10 @@ class Meta(lightbulb.Plugin):
                     + f"Guilds: `{len(ctx.bot.cache.get_available_guilds_view())}`\n"
                     + f":adult:Users: `{len(ctx.bot.cache.get_users_view())}`\n"
                     + f"Commands: `{len(ctx.bot.commands)}`\n"
-                    + f"Database calls: `{ctx.bot.db.calls}`"
+                    + f"Database calls: `{ctx.bot.db.calls}`\n"
+                    + f"Python version: `{python_version()}`\n"
+                    + f"Hikari version: `{hikari.__version__}`\n"
+                    + f"Lightbulb version: `{lightbulb.__version__}`"
                 ),
                 thumbnail=ctx.bot.me.avatar_url or ctx.bot.me.default_avatar_url,
             )

@@ -28,7 +28,7 @@ class Guild(lightbulb.plugins.Plugin):
         """Add a prefix to your guild."""
         await ctx.bot.redis_cache.add_prefixes(ctx.guild_id, prefix)
         await ctx.bot.db.execute(
-            "UPDATE guilds SET prefixes = array_append(prefixes, $1) WHERE guildid = $2", prefix, ctx.guild_id
+            "UPDATE guilds SET prefixes = array_append(prefixes, $1) WHERE guild_id = $2", prefix, ctx.guild_id
         )
         await ctx.respond_embed(f"Successfully added `{prefix}`.")
 
@@ -38,7 +38,7 @@ class Guild(lightbulb.plugins.Plugin):
         """Remove a prefix from your guild."""
         await ctx.bot.redis_cache.delete_prefixes(ctx.guild_id, prefix)
         await ctx.bot.db.execute(
-            "UPDATE guilds SET prefixes = array_remove(prefixes, $1) WHERE guildid = $2", prefix, ctx.guild_id
+            "UPDATE guilds SET prefixes = array_remove(prefixes, $1) WHERE guild_id = $2", prefix, ctx.guild_id
         )
         await ctx.respond_embed(f"Successfully removed `{prefix}`.")
 

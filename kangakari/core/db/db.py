@@ -37,6 +37,11 @@ class Database:
     def is_connected(self) -> bool:
         return self._connected.is_set()
 
+    @property
+    def pool(self) -> asyncpg.Pool:
+        assert self.is_connected, "Not connected."
+        return self._pool()
+
     async def connect(self) -> None:
         assert not self.is_connected, "Already connected."
         self._pool: asyncpg.Pool = await asyncpg.create_pool(dsn=self.bot.config.DB_DSN)
@@ -54,13 +59,13 @@ class Database:
     async def sync(self) -> None:
         await self.execute_script(os.path.join(self.bot._static, "script.sql"), self.bot.config.DEFAULT_PREFIX)
         await self.execute_many(
-            "INSERT INTO guilds (guildid) VALUES ($1) ON CONFLICT DO NOTHING",
+            "INSERT INTO guilds (guild_id) VALUES ($1) ON CONFLICT DO NOTHING",
             [(guild,) for guild in self.bot.cache.get_available_guilds_view()],
         )
-        stored = [guild_id for guild_id in await self.column("SELECT guildid FROM guilds")]
+        stored = [guild_id for guild_id in await self.column("SELECT guild_id FROM guilds")]
         member_of = self.bot.cache.get_available_guilds_view()
         to_remove = [(guild_id,) for guild_id in set(stored) - set(member_of)]
-        await self.execute_many("DELETE FROM guilds WHERE guildid = $1;", to_remove)
+        await self.execute_many("DELETE FROM guilds WHERE guild_id = $1;", to_remove)
 
         logging.info("Synchronised database.")
 
