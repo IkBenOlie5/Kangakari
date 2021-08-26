@@ -42,41 +42,57 @@ class Help(lightbulb.help.HelpCommand):
 
     async def send_plugin_help(self, ctx: lightbulb.Context, plugin: lightbulb.Plugin) -> None:
         await ctx.respond_embed(
-            f"> **Help for plugin `{plugin.name}`**\n"
-            + (lightbulb.help.get_help_text(plugin).replace("\n", "\n> ") or "No help text provided.")
-            + "\n\nCommands:"
-            + "\n```\n"
-            + (
-                "\n".join(f"{c.name}" for c in sorted(plugin._commands.values(), key=attrgetter("name")))
-                or "No commands in the plugin."
+            "\n".join(
+                [
+                    f"> **Help for plugin `{plugin.name}`**",
+                    (lightbulb.help.get_help_text(plugin).replace("\n", "\n> ") or "No help text provided."),
+                    "\nCommands:",
+                    "```",
+                    (
+                        "\n".join(f"{c.name}" for c in sorted(plugin._commands.values(), key=attrgetter("name")))
+                        or "No commands in the plugin."
+                    ),
+                    "```",
+                ]
             )
-            + "```"
         )
 
     async def send_command_help(self, ctx: lightbulb.Context, cmd: lightbulb.Command) -> None:
         await ctx.respond_embed(
-            f"> **Help for command `{cmd.name}`**\n"
-            + (lightbulb.help.get_help_text(cmd) or "No help text provided.")
-            + "\n\nUsage:"
-            + f"\n```{ctx.clean_prefix}{lightbulb.help.get_command_signature(cmd)}```"
-            + f"\nRunnable by you? `{await self.check_runnable(ctx, cmd)}`"
+            "\n".join(
+                [
+                    f"> **Help for command `{cmd.name}`**",
+                    (lightbulb.help.get_help_text(cmd) or "No help text provided."),
+                    "\nUsage:",
+                    f"```{ctx.clean_prefix}{lightbulb.help.get_command_signature(cmd)}```",
+                    f"Runnable by you? `{await self.check_runnable(ctx, cmd)}`",
+                ]
+            ),
         )
 
     async def send_group_help(self, ctx: lightbulb.Context, group: lightbulb.Group) -> None:
         await ctx.respond_embed(
-            f"> **Help for command group `{group.name}`**\n"
-            + (lightbulb.help.get_help_text(group) or "No help text provided.")
-            + "\n\nUsage:"
-            + f"```{ctx.clean_prefix}{lightbulb.help.get_command_signature(group)}```"
-            + (
-                (
-                    "\nSubcommands:"
-                    + "\n```\n"
-                    + "\n".join(c.name for c in sorted(group.subcommands, key=attrgetter("name")))
-                    + "```"
-                )
-                if group.subcommands
-                else "No subcommands in the group."
+            "\n".join(
+                [
+                    f"> **Help for command group `{group.name}`**",
+                    (lightbulb.help.get_help_text(group) or "No help text provided."),
+                    "\nUsage:",
+                    f"```{ctx.clean_prefix}{lightbulb.help.get_command_signature(group)}```",
+                    (
+                        (
+                            "\n".join(
+                                [
+                                    "\nSubcommands:",
+                                    "```",
+                                    "\n".join(c.name for c in sorted(group.subcommands, key=attrgetter("name"))),
+                                    "```",
+                                ]
+                            )
+                        )
+                        if group.subcommands
+                        else "No subcommands in the group."
+                    ),
+                    f"\nRunnable by you? `{await self.check_runnable(ctx, group)}`",
+                ]
             )
-            + f"\nRunnable by you? `{await self.check_runnable(ctx, group)}`"
         )

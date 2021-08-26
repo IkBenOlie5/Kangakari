@@ -12,9 +12,11 @@ class Handler(lightbulb.Plugin):
             text = f"The command `{event.command.qualified_name}` can only be used inside a NSFW channel."
             await event.context.respond_embed(text)
         elif isinstance(event.exception, lightbulb.errors.NotEnoughArguments):
-            text = (
-                f"The command `{event.command.qualified_name}` misses the argument(s): "
-                + f"`{' | '.join(event.exception.missing_args)}`."
+            text = "".join(
+                [
+                    f"The command `{event.command.qualified_name}` misses the argument(s): ",
+                    f"`{' | '.join(event.exception.missing_args)}`.",
+                ],
             )
             await event.context.respond_embed(text)
         elif isinstance(event.exception, lightbulb.errors.ConverterFailure):

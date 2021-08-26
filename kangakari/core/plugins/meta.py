@@ -44,29 +44,38 @@ class Meta(lightbulb.Plugin):
             embed=ctx.bot.embeds.build(
                 ctx=ctx,
                 description=(
-                    f"Created at: `{guild.created_at.date().isoformat()}`\n"
-                    + f"Owner: `{ctx.bot.cache.get_member(guild_id, guild.owner_id).display_name}`\n"
-                    + f"Verify level: `{str(guild.verification_level).title()}`\n"
-                    + f"ID: `{guild_id}`\n"
-                    + f"Emojis: `{len(guild.emojis)}`\n"
-                    + f"Roles: `{len(guild.roles)}`"
+                    "\n".join(
+                        [
+                            f"Created at: `{guild.created_at.date().isoformat()}`",
+                            f"Owner: `{ctx.bot.cache.get_member(guild_id, guild.owner_id).display_name}`",
+                            f"Verify level: `{str(guild.verification_level).title()}`",
+                            f"ID: `{guild_id}`",
+                            f"Emojis: `{len(guild.emojis)}`",
+                            f"Roles: `{len(guild.roles)}`",
+                        ]
+                    )
                 ),
                 fields=[
                     (
                         "Members",
-                        (
-                            f"Total: `{len(ms)}`\n"
-                            + f":adult:Humans: `{len([ms[m_id] for m_id in ms if not ms[m_id].is_bot])}`\n"
-                            + f":robot:Bots: `{len([ms[m_id] for m_id in ms if ms[m_id].is_bot])}`"
+                        "\n".join(
+                            [
+                                f"Total: `{len(ms)}`",
+                                f":adult:Humans: `{len([ms[m_id] for m_id in ms if not ms[m_id].is_bot])}`",
+                                f":robot:Bots: `{len([ms[m_id] for m_id in ms if ms[m_id].is_bot])}`",
+                            ]
                         ),
                         True,
                     ),
                     (
                         "Channels",
-                        f":sound:Voice: `{len([cs[c_id] for c_id in cs if cs[c_id].type == hikari.ChannelType.GUILD_VOICE])}`\n"
-                        + f":underage:NSFW: `{len([cs[c_id] for c_id in cs if cs[c_id].is_nsfw])}`\n"
-                        + ":speech_balloon:Text: "
-                        + f"`{len([cs[c_id] for c_id in cs if cs[c_id].type == hikari.ChannelType.GUILD_TEXT])}`",
+                        "\n".join(
+                            [
+                                f":sound:Voice: `{len([cs[c_id] for c_id in cs if cs[c_id].type == hikari.ChannelType.GUILD_VOICE])}`",
+                                f":underage:NSFW: `{len([cs[c_id] for c_id in cs if cs[c_id].is_nsfw])}`",
+                                f":speech_balloon:Text: `{len([cs[c_id] for c_id in cs if cs[c_id].type == hikari.ChannelType.GUILD_TEXT])}`",
+                            ]
+                        ),
                         True,
                     ),
                 ],
@@ -81,12 +90,14 @@ class Meta(lightbulb.Plugin):
         await ctx.respond(
             embed=ctx.bot.embeds.build(
                 ctx=ctx,
-                description=(
-                    f"Created at: `{user.created_at.date().isoformat()}`\n"
-                    + f"ID: `{user.id}`\n"
-                    + f"Username: `{user.username}`\n"
-                    + f"Discriminator: `{user.discriminator}`\n"
-                    + f":robot:Bot? `{user.is_bot}`"
+                description="\n".join(
+                    [
+                        f"Created at: `{user.created_at.date().isoformat()}`",
+                        f"ID: `{user.id}`",
+                        f"Username: `{user.username}`",
+                        f"Discriminator: `{user.discriminator}`",
+                        f":robot:Bot? `{user.is_bot}`",
+                    ]
                 ),
                 thumbnail=user.avatar_url or user.default_avatar_url,
             )
@@ -104,15 +115,17 @@ class Meta(lightbulb.Plugin):
         await ctx.respond(
             embed=ctx.bot.embeds.build(
                 ctx=ctx,
-                description=(
-                    f"Developer(s): {' | '.join(f'<@{owner_id}>' for owner_id in ctx.bot.owner_ids)}\n"
-                    + f"Guilds: `{len(ctx.bot.cache.get_available_guilds_view())}`\n"
-                    + f":adult:Users: `{len(ctx.bot.cache.get_users_view())}`\n"
-                    + f"Commands: `{len(ctx.bot.commands)}`\n"
-                    + f"Database calls: `{ctx.bot.db.calls}`\n"
-                    + f"Python version: `{python_version()}`\n"
-                    + f"Hikari version: `{hikari.__version__}`\n"
-                    + f"Lightbulb version: `{lightbulb.__version__}`"
+                description="\n".join(
+                    [
+                        f"Developer(s): {' | '.join(f'<@{owner_id}>' for owner_id in ctx.bot.owner_ids)}",
+                        f"Guilds: `{len(ctx.bot.cache.get_available_guilds_view())}`",
+                        f":adult:Users: `{len(ctx.bot.cache.get_users_view())}`",
+                        f"Commands: `{len(ctx.bot.commands)}`",
+                        f"Database calls: `{ctx.bot.db.calls}`",
+                        f"Python version: `{python_version()}`",
+                        f"Hikari version: `{hikari.__version__}`",
+                        f"Lightbulb version: `{lightbulb.__version__}`",
+                    ]
                 ),
                 thumbnail=ctx.bot.me.avatar_url or ctx.bot.me.default_avatar_url,
             )
@@ -125,15 +138,17 @@ class Meta(lightbulb.Plugin):
         await ctx.respond(
             embed=ctx.bot.embeds.build(
                 ctx=ctx,
-                description=(
-                    f"Created at: `{role.created_at.date().isoformat()}`\n"
-                    + f"Name: `{role.name}`\n"
-                    + f"ID: `{role.id}`\n"
-                    + f":hammer:Administrator? `{bool(role.permissions & hikari.Permissions.ADMINISTRATOR)}`\n"
-                    + f":cyclone:Mentionable? `{role.is_mentionable}`\n"
-                    + f"Hoisted? `{role.is_hoisted}`\n"
-                    + f"Colo(u)r: `{role.color.hex_code}`\n"
-                    + f"Position: `{role.position}`"
+                description="\n".join(
+                    [
+                        f"Created at: `{role.created_at.date().isoformat()}`",
+                        f"Name: `{role.name}`",
+                        f"ID: `{role.id}`",
+                        f":hammer:Administrator? `{bool(role.permissions & hikari.Permissions.ADMINISTRATOR)}`",
+                        f":cyclone:Mentionable? `{role.is_mentionable}`",
+                        f"Hoisted? `{role.is_hoisted}`",
+                        f"Colo(u)r: `{role.color.hex_code}`",
+                        f"Position: `{role.position}`",
+                    ]
                 ),
                 thumbnail=ctx.guild.icon_url,
             )
