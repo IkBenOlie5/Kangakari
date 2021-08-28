@@ -1,26 +1,39 @@
+from __future__ import annotations
+
 import inspect
 import textwrap
 import time
-import typing as t
+import typing
 from platform import python_version
 
-import hikari
-import lightbulb
+from hikari import ChannelType
+from hikari import Permissions
+from hikari import __version__ as hikari_version
+from lightbulb import Plugin
+from lightbulb import __version__ as lightbulb_version
+from lightbulb import commands
 
 from kangakari.core.utils import command_converter
 
+if typing.TYPE_CHECKING:
+    from hikari import Guild
+    from hikari import User
+    from lightbulb import Bot
+    from lightbulb import Context
+    from lightbulb import Role
 
-class Meta(lightbulb.Plugin):
+
+class Meta(Plugin):
     """Utility commands."""
 
-    @lightbulb.command(name="source", aliases=["src"])
-    async def source_command(self, ctx: lightbulb.Context, command: command_converter) -> None:
+    @commands.command(name="source", aliases=["src"])
+    async def source_command(self, ctx: Context, command: command_converter) -> None:
         """Get the code of a command."""
         code = textwrap.dedent((inspect.getsource(command.callback))).replace("\x60", "\u02CB")
         await ctx.respond_embed(f"```py\n{code}```")
 
-    @lightbulb.command(name="ping")
-    async def ping_command(self, ctx: lightbulb.Context) -> None:
+    @commands.command(name="ping")
+    async def ping_command(self, ctx: Context) -> None:
         """Get the bot's ping."""
         start = time.time()
         msg = await ctx.respond_embed("uwu")
@@ -33,8 +46,8 @@ class Meta(lightbulb.Plugin):
             )
         )
 
-    @lightbulb.command(name="guild_info", aliases=["guildinfo", "gi", "server_info", "serverinfo", "si"])
-    async def guild_info_command(self, ctx: lightbulb.Context, guild: t.Optional[hikari.Guild] = None) -> None:
+    @commands.command(name="guild_info", aliases=["guildinfo", "gi", "server_info", "serverinfo", "si"])
+    async def guild_info_command(self, ctx: Context, guild: typing.Optional[Guild] = None) -> None:
         """Get information about a guild."""
         guild = guild or ctx.guild
         guild_id = guild.id or ctx.guild_id
@@ -71,9 +84,9 @@ class Meta(lightbulb.Plugin):
                         "Channels",
                         "\n".join(
                             [
-                                f":sound:Voice: `{len([cs[c_id] for c_id in cs if cs[c_id].type == hikari.ChannelType.GUILD_VOICE])}`",
+                                f":sound:Voice: `{len([cs[c_id] for c_id in cs if cs[c_id].type == ChannelType.GUILD_VOICE])}`",
                                 f":underage:NSFW: `{len([cs[c_id] for c_id in cs if cs[c_id].is_nsfw])}`",
-                                f":speech_balloon:Text: `{len([cs[c_id] for c_id in cs if cs[c_id].type == hikari.ChannelType.GUILD_TEXT])}`",
+                                f":speech_balloon:Text: `{len([cs[c_id] for c_id in cs if cs[c_id].type == ChannelType.GUILD_TEXT])}`",
                             ]
                         ),
                         True,
@@ -83,8 +96,8 @@ class Meta(lightbulb.Plugin):
             )
         )
 
-    @lightbulb.command(name="user_info", aliases=["userinfo", "ui", "member_info", "memberinfo", "mi"])
-    async def user_info_command(self, ctx: lightbulb.Context, user: t.Optional[hikari.User] = None) -> None:
+    @commands.command(name="user_info", aliases=["userinfo", "ui", "member_info", "memberinfo", "mi"])
+    async def user_info_command(self, ctx: Context, user: typing.Optional[User] = None) -> None:
         """Get information about a user."""
         user = user or ctx.author
         await ctx.respond(
@@ -103,14 +116,14 @@ class Meta(lightbulb.Plugin):
             )
         )
 
-    @lightbulb.command(name="avatar", aliases=["av", "profile", "pf"])
-    async def avatar_command(self, ctx: lightbulb.Context, user: t.Optional[hikari.User] = None) -> None:
+    @commands.command(name="avatar", aliases=["av", "profile", "pf"])
+    async def avatar_command(self, ctx: Context, user: typing.Optional[User] = None) -> None:
         """Get the avatar of a user."""
         user = user or ctx.author
         await ctx.respond(embed=ctx.bot.embeds.build(ctx=ctx, image=user.avatar_url or user.default_avatar_url))
 
-    @lightbulb.command(name="bot_info", aliases=["botinfo", "bi", "about", "abt"])
-    async def bot_info_command(self, ctx: lightbulb.Context) -> None:
+    @commands.command(name="bot_info", aliases=["botinfo", "bi", "about", "abt"])
+    async def bot_info_command(self, ctx: Context) -> None:
         """Get information about the bot."""
         await ctx.respond(
             embed=ctx.bot.embeds.build(
@@ -123,16 +136,16 @@ class Meta(lightbulb.Plugin):
                         f"Commands: `{len(ctx.bot.commands)}`",
                         f"Database calls: `{ctx.bot.db.calls}`",
                         f"Python version: `{python_version()}`",
-                        f"Hikari version: `{hikari.__version__}`",
-                        f"Lightbulb version: `{lightbulb.__version__}`",
+                        f"Hikari version: `{hikari_version}`",
+                        f"Lightbulb version: `{lightbulb_version}`",
                     ]
                 ),
                 thumbnail=ctx.bot.me.avatar_url or ctx.bot.me.default_avatar_url,
             )
         )
 
-    @lightbulb.command(name="role_info", aliases=["roleinfo", "ri"])
-    async def role_info_command(self, ctx: lightbulb.Context, role: t.Optional[hikari.Role] = None) -> None:
+    @commands.command(name="role_info", aliases=["roleinfo", "ri"])
+    async def role_info_command(self, ctx: Context, role: typing.Optional[Role] = None) -> None:
         """Get information about a role."""
         role = role or ctx.member.top_role
         await ctx.respond(
@@ -143,7 +156,7 @@ class Meta(lightbulb.Plugin):
                         f"Created at: `{role.created_at.date().isoformat()}`",
                         f"Name: `{role.name}`",
                         f"ID: `{role.id}`",
-                        f":hammer:Administrator? `{bool(role.permissions & hikari.Permissions.ADMINISTRATOR)}`",
+                        f":hammer:Administrator? `{bool(role.permissions & Permissions.ADMINISTRATOR)}`",
                         f":cyclone:Mentionable? `{role.is_mentionable}`",
                         f"Hoisted? `{role.is_hoisted}`",
                         f"Colo(u)r: `{role.color.hex_code}`",
@@ -155,9 +168,9 @@ class Meta(lightbulb.Plugin):
         )
 
 
-def load(bot: lightbulb.Bot) -> None:
+def load(bot: Bot) -> None:
     bot.add_plugin(Meta())
 
 
-def unload(bot: lightbulb.Bot) -> None:
+def unload(bot: Bot) -> None:
     bot.remove_plugin("Meta")

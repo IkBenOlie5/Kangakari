@@ -1,24 +1,21 @@
 import datetime
-import inspect
-import textwrap
-import time
-import typing as t
 
-import hikari
-import lightbulb
+from lightbulb import Bot
+from lightbulb import Context
+from lightbulb import Plugin
+from lightbulb import commands
 from pytz import utc
 
-from kangakari.core.utils import command_converter
 from kangakari.core.utils import timedelta_converter
 from kangakari.core.utils import timezone_converter
 
 
-class Time(lightbulb.Plugin):
+class Time(Plugin):
     """Time commands."""
 
-    @lightbulb.command(name="time_in", aliases=["timein", "ti"])
+    @commands.command(name="time_in", aliases=["timein", "ti"])
     async def time_in_command(
-        self, ctx: lightbulb.Context, timedelta: timedelta_converter, timezone: timezone_converter = utc
+        self, ctx: Context, timedelta: timedelta_converter, timezone: timezone_converter = utc
     ) -> None:
         """Get the time."""
         unix = int(
@@ -27,13 +24,11 @@ class Time(lightbulb.Plugin):
         await ctx.respond_embed(f"It will be <t:{unix}:f>.")
 
     @staticmethod
-    async def send_reminder(ctx: lightbulb.Context, text: str) -> None:
-        await ctx.respond(f"Reminder for: {ctx.author.mention}\n{text}")
+    async def send_reminder(ctx: Context, text: str) -> None:
+        await ctx.respond_embed(f"Reminder for: {ctx.author.mention}\n{text}")
 
-    @lightbulb.command(name="reminder", aliases=["remind"])
-    async def reminder_command(
-        self, ctx: lightbulb.Context, timedelta: timedelta_converter, *, text: str = ""
-    ) -> None:
+    @commands.command(name="reminder", aliases=["remind"])
+    async def reminder_command(self, ctx: Context, timedelta: timedelta_converter, *, text: str = "") -> None:
         """Create a reminder to help you."""
         ctx.bot.scheduler.add_job(
             self.send_reminder,
@@ -45,9 +40,9 @@ class Time(lightbulb.Plugin):
         await ctx.respond_embed("Created a reminder.")
 
 
-def load(bot: lightbulb.Bot) -> None:
+def load(bot: Bot) -> None:
     bot.add_plugin(Time())
 
 
-def unload(bot: lightbulb.Bot) -> None:
+def unload(bot: Bot) -> None:
     bot.remove_plugin("Time")

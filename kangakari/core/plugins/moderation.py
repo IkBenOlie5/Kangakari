@@ -1,58 +1,62 @@
-import typing as t
+from __future__ import annotations
 
-import hikari
-import lightbulb
+import typing
+
+from hikari import Permissions
+from hikari import errors
+from lightbulb import Plugin
+from lightbulb import checks
+from lightbulb import commands
+
+if typing.TYPE_CHECKING:
+    from hikari import GuildTextChannel
+    from hikari import Member
+    from hikari import User
+    from lightbulb import Bot
+    from lightbulb import Context
 
 
-class Moderation(lightbulb.Plugin):
+class Moderation(Plugin):
     """Commands for moderating your guild."""
 
-    @lightbulb.has_guild_permissions(hikari.Permissions.KICK_MEMBERS)
-    @lightbulb.command(name="kick")
-    async def kick_command(
-        self, ctx: lightbulb.Context, member: hikari.Member, *, reason: str = "No reason provided."
-    ) -> None:
+    @checks.has_guild_permissions(Permissions.KICK_MEMBERS)
+    @commands.command(name="kick")
+    async def kick_command(self, ctx: Context, member: Member, *, reason: str = "No reason provided.") -> None:
         """Kick a member."""
         await member.kick(reason=reason)
         await ctx.respond_embed(f"Kicked `{member.display_name}`` for reason `{reason}`.")
 
-    @lightbulb.has_guild_permissions(hikari.Permissions.BAN_MEMBERS)
-    @lightbulb.command(name="ban")
-    async def ban_command(
-        self, ctx: lightbulb.Context, member: hikari.Member, *, reason: str = "No reason provided."
-    ) -> None:
+    @checks.has_guild_permissions(Permissions.BAN_MEMBERS)
+    @commands.command(name="ban")
+    async def ban_command(self, ctx: Context, member: Member, *, reason: str = "No reason provided.") -> None:
         """Ban a member."""
         await member.ban(reason=reason)
         await ctx.respond_embed(f"Banned `{member.display_name}`` for reason `{reason}`.")
 
-    @lightbulb.has_guild_permissions(hikari.Permissions.BAN_MEMBERS)
-    @lightbulb.command(name="unban")
-    async def unban_command(
-        self, ctx: lightbulb.Context, user: hikari.User, *, reason: str = "No reason provided."
-    ) -> None:
+    @checks.has_guild_permissions(Permissions.BAN_MEMBERS)
+    @commands.command(name="unban")
+    async def unban_command(self, ctx: Context, user: User, *, reason: str = "No reason provided.") -> None:
         """Unban a user."""
         try:
             await ctx.guild.unban(user=user, reason=reason)
-        except hikari.errors.NotFoundError:
+        except errors.NotFoundError:
             await ctx.respond_embed(f"User `{user.username}` is not banned from this guild.")
             return
         await ctx.respond_embed(f"Unbanned `{user.username}`` for reason `{reason}`.")
 
-    @lightbulb.has_guild_permissions(hikari.Permissions.MANAGE_MESSAGES)
-    @lightbulb.command(name="clear", aliases=["purge"])
-    async def clear_command(self, ctx: lightbulb.Context, amount: int = 1) -> None:
+    @checks.has_guild_permissions(Permissions.MANAGE_MESSAGES)
+    @commands.command(name="clear", aliases=["purge"])
+    async def clear_command(self, ctx: Context, amount: int = 1) -> None:
         """Clear messages."""
         messages = list(await ctx.channel.fetch_history().limit(amount + 1))
         try:
             await ctx.channel.delete_messages(messages)
-        except hikari.errors.BulkDeleteError:
+        except errors.BulkDeleteError:
             await ctx.respond_embed("You can only bulk delete messages that are under 14 days old.")
 
-    @lightbulb.has_guild_permissions(hikari.Permissions.MANAGE_MESSAGES)
-    @lightbulb.command(name="clear_channel", aliases=["clearchannel", "cc"])
-    async def clear_channel_command(
-        self, ctx: lightbulb.Context, channel: t.Optional[hikari.GuildTextChannel]
-    ) -> None:
+    @checks.has_guild_permissions(Permissions.MANAGE_MESSAGES)
+    @commands.command(name="clear_channel", aliases=["clearchannel", "cc"])
+    async def clear_channel_command(self, ctx: Context, channel: typing.Optional[GuildTextChannel]) -> None:
         """Clear an entire channel."""
         channel = channel or ctx.channel
         await ctx.guild.create_text_channel(
@@ -67,18 +71,18 @@ class Moderation(lightbulb.Plugin):
         )
         await channel.delete()
 
-    @lightbulb.has_guild_permissions(hikari.Permissions.MANAGE_NICKNAMES)
-    @lightbulb.command(name="nick")
-    async def nick_command(self, ctx: lightbulb.Context, member: hikari.Member, *, nick: str = "nameless") -> None:
+    @checks.has_guild_permissions(Permissions.MANAGE_NICKNAMES)
+    @commands.command(name="nick")
+    async def nick_command(self, ctx: Context, member: Member, *, nick: str = "nameless") -> None:
         """Nick a member."""
         old = member.nickname
         await member.edit(nick=nick)
         await ctx.respond_embed(f"Nicked `{old}` to `{nick}`.")
 
 
-def load(bot: lightbulb.Bot) -> None:
+def load(bot: Bot) -> None:
     bot.add_plugin(Moderation())
 
 
-def unload(bot: lightbulb.Bot) -> None:
+def unload(bot: Bot) -> None:
     bot.remove_plugin("Moderation")

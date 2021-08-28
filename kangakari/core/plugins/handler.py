@@ -1,17 +1,27 @@
-import lightbulb
+from __future__ import annotations
+
+import typing
+
+from lightbulb import CommandErrorEvent
+from lightbulb import Plugin
+from lightbulb import errors
+from lightbulb import listener
+
+if typing.TYPE_CHECKING:
+    from lightbulb import Bot
 
 
-class Handler(lightbulb.Plugin):
+class Handler(Plugin):
     """Error handler."""
 
-    @lightbulb.listener(event_type=lightbulb.CommandErrorEvent)
-    async def on_command_error(self, event: lightbulb.CommandErrorEvent) -> None:
-        if isinstance(event.exception, (lightbulb.errors.CommandNotFound)):
+    @listener(event_type=CommandErrorEvent)
+    async def on_command_error(self, event: CommandErrorEvent) -> None:
+        if isinstance(event.exception, (errors.CommandNotFound)):
             pass
-        elif isinstance(event.exception, lightbulb.errors.NSFWChannelOnly):
+        elif isinstance(event.exception, errors.NSFWChannelOnly):
             text = f"The command `{event.command.qualified_name}` can only be used inside a NSFW channel."
             await event.context.respond_embed(text)
-        elif isinstance(event.exception, lightbulb.errors.NotEnoughArguments):
+        elif isinstance(event.exception, errors.NotEnoughArguments):
             text = "".join(
                 [
                     f"The command `{event.command.qualified_name}` misses the argument(s): ",
@@ -19,7 +29,7 @@ class Handler(lightbulb.Plugin):
                 ],
             )
             await event.context.respond_embed(text)
-        elif isinstance(event.exception, lightbulb.errors.ConverterFailure):
+        elif isinstance(event.exception, errors.ConverterFailure):
             argument = event.exception.text.split(" ")[-1]
             text = f"Converter failed for argument: `{argument}`."
             await event.context.respond_embed(text)
@@ -28,9 +38,9 @@ class Handler(lightbulb.Plugin):
             raise event.exception
 
 
-def load(bot: lightbulb.Bot) -> None:
+def load(bot: Bot) -> None:
     bot.add_plugin(Handler())
 
 
-def unload(bot: lightbulb.Bot) -> None:
+def unload(bot: Bot) -> None:
     bot.remove_plugin("Handler")

@@ -1,17 +1,21 @@
+from __future__ import annotations
+
 import asyncio
 import logging
 import os
-import typing as t
+import typing
 from functools import wraps
 
 import aiofiles
 import asyncpg
-import lightbulb
+
+if typing.TYPE_CHECKING:
+    from lightbulb import Bot
 
 
-def acquire(func: t.Callable[..., t.Any]) -> t.Callable[..., t.Any]:
+def acquire(func: typing.Callable[..., typing.Any]) -> typing.Callable[..., typing.Any]:
     @wraps(func)
-    async def wrapper(self: "Database", *args: t.Any, **kwargs: t.Any) -> t.Any:
+    async def wrapper(self: "Database", *args: typing.Any, **kwargs: typing.Any) -> typing.Any:
         assert self.is_connected, "Not connected."
         self.calls += 1
         cxn: asyncpg.Connection
@@ -23,10 +27,10 @@ def acquire(func: t.Callable[..., t.Any]) -> t.Callable[..., t.Any]:
 
 
 class Database:
-    __slots__: t.Sequence[str] = ("bot", "_connected", "_pool", "calls")
+    __slots__: typing.Sequence[str] = ("bot", "_connected", "_pool", "calls")
 
-    def __init__(self, bot: lightbulb.Bot) -> None:
-        self.bot: lightbulb.Bot = bot
+    def __init__(self, bot: Bot) -> None:
+        self.bot = bot
         self._connected = asyncio.Event()
         self.calls = 0
 
@@ -70,33 +74,35 @@ class Database:
         logging.info("Synchronised database.")
 
     @acquire
-    async def execute(self, query: str, *values: t.Any, _cxn: asyncpg.Connection) -> None:
+    async def execute(self, query: str, *values: typing.Any, _cxn: asyncpg.Connection) -> None:
         await _cxn.execute(query, *values)
 
     @acquire
-    async def execute_many(self, query: str, valueset: t.List[t.Any], _cxn: asyncpg.Connection) -> None:
+    async def execute_many(self, query: str, valueset: typing.List[typing.Any], _cxn: asyncpg.Connection) -> None:
         await _cxn.executemany(query, valueset)
 
     @acquire
-    async def val(self, query: str, *values: t.Any, column: int = 0, _cxn: asyncpg.Connection) -> t.Any:
+    async def val(self, query: str, *values: typing.Any, column: int = 0, _cxn: asyncpg.Connection) -> typing.Any:
         return await _cxn.fetchval(query, *values, column=column)
 
     @acquire
-    async def column(self, query: str, *values: t.Any, column: int = 0, _cxn: asyncpg.Connection) -> t.List[t.Any]:
+    async def column(
+        self, query: str, *values: typing.Any, column: int = 0, _cxn: asyncpg.Connection
+    ) -> typing.List[typing.Any]:
         return [record[column] for record in await _cxn.fetch(query, *values)]
 
     @acquire
-    async def row(self, query: str, *values: t.Any, _cxn: asyncpg.Connection) -> t.List[t.Any]:
+    async def row(self, query: str, *values: typing.Any, _cxn: asyncpg.Connection) -> typing.List[typing.Any]:
         return await _cxn.fetchrow(query=query, *values)
 
     @acquire
-    async def all(self, query: str, *values: t.Any, _cxn: asyncpg.Connection) -> t.List[asyncpg.Record]:
+    async def all(self, query: str, *values: typing.Any, _cxn: asyncpg.Connection) -> typing.List[asyncpg.Record]:
         return await _cxn.fetch(query, *values)
 
     @acquire
-    async def execute_script(self, path: str, *args: t.Any, _cxn: asyncpg.Connection) -> None:
+    async def execute_script(self, path: str, *args: typing.Any, _cxn: asyncpg.Connection) -> None:
         async with aiofiles.open(path, "r") as script:
             await _cxn.execute((await script.read()) % args)
 
 
-__all__: t.Sequence[str] = ["Database"]
+__all__: typing.Sequence[str] = ["Database"]

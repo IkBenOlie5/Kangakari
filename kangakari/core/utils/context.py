@@ -1,10 +1,14 @@
-import typing as t
+from __future__ import annotations
 
-import hikari
-import lightbulb
+import typing
+
+from lightbulb import Context
+
+if typing.TYPE_CHECKING:
+    from hikari import Message
 
 
-class Context(lightbulb.Context):
-    async def respond_embed(self, content: str, *args: t.Any, **kwargs: t.Any) -> hikari.Message:
+class Context(Context):
+    async def respond_embed(self, content: str, *args: typing.Any, **kwargs: typing.Any) -> Message:
         embed = self.bot.embeds.build(ctx=self, description=content)
         return await self.respond(embed=embed, *args, **kwargs)
