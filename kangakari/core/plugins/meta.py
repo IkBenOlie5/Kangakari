@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import inspect
 import textwrap
 import time
@@ -7,20 +5,18 @@ import typing
 from platform import python_version
 
 from hikari import ChannelType
+from hikari import Guild
 from hikari import Permissions
+from hikari import User
 from hikari import __version__ as hikari_version
+from lightbulb import Bot
+from lightbulb import Context
 from lightbulb import Plugin
+from lightbulb import Role
 from lightbulb import __version__ as lightbulb_version
 from lightbulb import commands
 
 from kangakari.core.utils import command_converter
-
-if typing.TYPE_CHECKING:
-    from hikari import Guild
-    from hikari import User
-    from lightbulb import Bot
-    from lightbulb import Context
-    from lightbulb import Role
 
 
 class Meta(Plugin):
