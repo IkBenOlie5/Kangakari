@@ -33,7 +33,7 @@ class Debug(Plugin):
             except errors.ExtensionNotLoaded:
                 logging.error(f"Plugin '{plugin}' is not currently loaded.")
 
-        await ctx.respond_embed(f"{count} extension(s) {action}ed.")
+        await ctx.success(f"{count} extension(s) {action}ed.")
 
     @checks.owner_only()
     @commands.command(name="reload", hidden=True)
@@ -57,7 +57,7 @@ class Debug(Plugin):
     @commands.command(name="shutdown", hidden=True)
     async def shutdown_command(self, ctx: Context) -> None:
         """Shut the bot down."""
-        await ctx.respond_embed("Shutting down.")
+        await ctx.info("Shutting down.")
         await ctx.bot.close()
 
 

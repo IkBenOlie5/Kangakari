@@ -15,7 +15,7 @@ if typing.TYPE_CHECKING:
 
 class Help(help.HelpCommand):
     async def object_not_found(self, ctx: Context, name: str) -> None:
-        await ctx.respond_embed(f"`{name}` is not a valid plugin, command or group.")
+        await ctx.warning(f"`{name}` is not a valid plugin, command or group.")
 
     @staticmethod
     async def check_runnable(ctx: Context, cmd: typing.Union[Command, Group]) -> bool:
@@ -47,10 +47,10 @@ class Help(help.HelpCommand):
                 short_help = help.get_help_text(c).split("\n")[0]
                 help_text.append(f"• `{c.name}` - {short_help}")
         help_text.append(f"\n> Use `{ctx.clean_prefix}help [command]` for more information.")
-        await ctx.respond_embed("\n".join(help_text))
+        await ctx.info("\n".join(help_text))
 
     async def send_plugin_help(self, ctx: Context, plugin: Plugin) -> None:
-        await ctx.respond_embed(
+        await ctx.info(
             "\n".join(
                 [
                     f"> **Help for plugin `{plugin.name}`**",
@@ -67,7 +67,7 @@ class Help(help.HelpCommand):
         )
 
     async def send_command_help(self, ctx: Context, cmd: Command) -> None:
-        await ctx.respond_embed(
+        await ctx.info(
             "\n".join(
                 [
                     f"> **Help for command `{cmd.name}`**",
@@ -80,7 +80,7 @@ class Help(help.HelpCommand):
         )
 
     async def send_group_help(self, ctx: Context, group: Group) -> None:
-        await ctx.respond_embed(
+        await ctx.info(
             "\n".join(
                 [
                     f"> **Help for command group `{group.name}`**",

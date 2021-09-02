@@ -20,7 +20,7 @@ class Handler(Plugin):
             pass
         elif isinstance(event.exception, errors.NSFWChannelOnly):
             text = f"The command `{event.command.qualified_name}` can only be used inside a NSFW channel."
-            await event.context.respond_embed(text)
+            await event.context.error(text)
         elif isinstance(event.exception, errors.NotEnoughArguments):
             text = "".join(
                 [
@@ -28,13 +28,13 @@ class Handler(Plugin):
                     f"`{' | '.join(event.exception.missing_args)}`.",
                 ],
             )
-            await event.context.respond_embed(text)
+            await event.context.error(text)
         elif isinstance(event.exception, errors.ConverterFailure):
             argument = event.exception.text.split(" ")[-1]
             text = f"Converter failed for argument: `{argument}`."
-            await event.context.respond_embed(text)
+            await event.context.error(text)
         else:
-            await event.context.respond_embed("I have errored, and I cannot get up.")
+            await event.context.error("I have errored, and I cannot get up.")
             raise event.exception
 
 

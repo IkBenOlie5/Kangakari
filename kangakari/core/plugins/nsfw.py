@@ -24,11 +24,14 @@ class NSFW(Plugin):
             try:
                 post = (await resp.json(content_type=None))[0]
             except IndexError:
-                await ctx.respond_embed(f"No post was found with tag(s) `{tags}`.")
+                await ctx.error(f"No post was found with tag(s) `{tags}`.")
                 return
         await ctx.respond(
             embed=ctx.bot.embeds.build(
-                ctx=ctx, description=f"[Original Post]({post['file_url']})", image=post["file_url"]
+                ctx=ctx,
+                description=f"[Original Post]({post['file_url']})",
+                image=post["file_url"],
+                color=ctx.bot.config.SUCCESS_COLOR,
             )
         )
         # TODO: this doesn't work if the file url is for a video
@@ -43,10 +46,13 @@ class NSFW(Plugin):
             try:
                 video = (await resp.json(content_type=None))["videos"][0]
             except IndexError:
-                await ctx.respond_embed(f"No video was found with query `{query}`.")
+                await ctx.error(f"No video was found with query `{query}`.")
         await ctx.respond(
             embed=ctx.bot.embeds.build(
-                ctx=ctx, description=f"[Original Video]({video['url']})", image=video["default_thumb"]["src"]
+                ctx=ctx,
+                description=f"[Original Video]({video['url']})",
+                image=video["default_thumb"]["src"],
+                color=ctx.bot.config.SUCCESS_COLOR,
             )
         )
 

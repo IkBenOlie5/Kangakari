@@ -26,19 +26,20 @@ class Meta(Plugin):
     async def source_command(self, ctx: Context, command: command_converter) -> None:
         """Get the code of a command."""
         code = textwrap.dedent((inspect.getsource(command.callback))).replace("\x60", "\u02CB")
-        await ctx.respond_embed(f"```py\n{code}```")
+        await ctx.info(f"```py\n{code}```")
 
     @commands.command(name="ping")
     async def ping_command(self, ctx: Context) -> None:
         """Get the bot's ping."""
         start = time.time()
-        msg = await ctx.respond_embed("uwu")
+        msg = await ctx.info("uwu")
         end = time.time()
 
         await msg.edit(
             embed=ctx.bot.embeds.build(
                 ctx=ctx,
                 description=f"**Gateway**: {ctx.bot.heartbeat_latency * 1000:,.0f} ms\n**REST**: {(end - start) * 1000:,.0f} ms",
+                color=ctx.bot.config.INFO_COLOR,
             )
         )
 

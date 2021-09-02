@@ -21,11 +21,11 @@ class Time(Plugin):
         unix = int(
             (datetime.datetime.utcnow() + timedelta + timezone.utcoffset(datetime.datetime.utcnow())).timestamp()
         )
-        await ctx.respond_embed(f"It will be <t:{unix}:f>.")
+        await ctx.info(f"It will be <t:{unix}:f>.")
 
     @staticmethod
     async def send_reminder(ctx: Context, text: str) -> None:
-        await ctx.respond_embed(f"Reminder for: {ctx.author.mention}\n{text}")
+        await ctx.info(f"Reminder for: {ctx.author.mention}\n{text}")
 
     @commands.command(name="reminder", aliases=["remind"])
     async def reminder_command(self, ctx: Context, timedelta: timedelta_converter, *, text: str = "") -> None:
@@ -37,7 +37,7 @@ class Time(Plugin):
             next_run_time=datetime.datetime.now() + timedelta,
         )
 
-        await ctx.respond_embed("Created a reminder.")
+        await ctx.success("Created a reminder.")
 
 
 def load(bot: Bot) -> None:

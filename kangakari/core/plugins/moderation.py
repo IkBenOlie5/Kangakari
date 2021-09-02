@@ -1,19 +1,15 @@
-from __future__ import annotations
-
 import typing
 
+from hikari import GuildTextChannel
+from hikari import Member
 from hikari import Permissions
+from hikari import User
 from hikari import errors
+from lightbulb import Bot
+from lightbulb import Context
 from lightbulb import Plugin
 from lightbulb import checks
 from lightbulb import commands
-
-if typing.TYPE_CHECKING:
-    from hikari import GuildTextChannel
-    from hikari import Member
-    from hikari import User
-    from lightbulb import Bot
-    from lightbulb import Context
 
 
 class Moderation(Plugin):
@@ -24,25 +20,25 @@ class Moderation(Plugin):
     async def kick_command(self, ctx: Context, member: Member, *, reason: str = "No reason provided.") -> None:
         """Kick a member."""
         await member.kick(reason=reason)
-        await ctx.respond_embed(f"Kicked `{member.display_name}`` for reason `{reason}`.")
+        await ctx.sucess(f"Kicked `{member.display_name}`` for reason `{reason}`.")
 
     @checks.has_guild_permissions(Permissions.BAN_MEMBERS)
     @commands.command(name="ban")
     async def ban_command(self, ctx: Context, member: Member, *, reason: str = "No reason provided.") -> None:
         """Ban a member."""
         await member.ban(reason=reason)
-        await ctx.respond_embed(f"Banned `{member.display_name}`` for reason `{reason}`.")
+        await ctx.sucess(f"Banned `{member.display_name}`` for reason `{reason}`.")
 
     @checks.has_guild_permissions(Permissions.BAN_MEMBERS)
     @commands.command(name="unban")
     async def unban_command(self, ctx: Context, user: User, *, reason: str = "No reason provided.") -> None:
         """Unban a user."""
         try:
-            await ctx.guild.unban(user=user, reason=reason)
+            await ctx.guild.unban(user=user.id, reason=reason)
         except errors.NotFoundError:
-            await ctx.respond_embed(f"User `{user.username}` is not banned from this guild.")
+            await ctx.warning(f"User `{user.username}` is not banned from this guild.")
             return
-        await ctx.respond_embed(f"Unbanned `{user.username}`` for reason `{reason}`.")
+        await ctx.sucess(f"Unbanned `{user.username}`` for reason `{reason}`.")
 
     @checks.has_guild_permissions(Permissions.MANAGE_MESSAGES)
     @commands.command(name="clear", aliases=["purge"])
@@ -52,7 +48,7 @@ class Moderation(Plugin):
         try:
             await ctx.channel.delete_messages(messages)
         except errors.BulkDeleteError:
-            await ctx.respond_embed("You can only bulk delete messages that are under 14 days old.")
+            await ctx.error("You can only bulk delete messages that are under 14 days old.")
 
     @checks.has_guild_permissions(Permissions.MANAGE_MESSAGES)
     @commands.command(name="clear_channel", aliases=["clearchannel", "cc"])
@@ -77,7 +73,7 @@ class Moderation(Plugin):
         """Nick a member."""
         old = member.nickname
         await member.edit(nick=nick)
-        await ctx.respond_embed(f"Nicked `{old}` to `{nick}`.")
+        await ctx.success(f"Nicked `{old}` to `{nick}`.")
 
 
 def load(bot: Bot) -> None:

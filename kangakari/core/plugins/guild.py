@@ -18,7 +18,7 @@ class Guild(Plugin):
 
     async def plugin_check(self, ctx: Context) -> bool:
         if ctx.guild_id is None:
-            await ctx.respond_embed("This command can only be executed inside servers.")
+            await ctx.error("This command can only be executed inside servers.")
             return False
         return True
 
@@ -30,7 +30,7 @@ class Guild(Plugin):
         except EntryNotFound:
             prefixes = []
         prefixes.append("@mention (can't be removed)")
-        await ctx.respond_embed("The current prefixes are: ```\n" + "\n".join(prefixes) + "```")
+        await ctx.info("The current prefixes are: ```\n" + "\n".join(prefixes) + "```")
 
     @checks.has_guild_permissions(Permissions.MANAGE_GUILD)
     @prefix_group.command(name="add")
@@ -40,7 +40,7 @@ class Guild(Plugin):
         await ctx.bot.db.execute(
             "UPDATE guilds SET prefixes = array_append(prefixes, $1) WHERE guild_id = $2", prefix, ctx.guild_id
         )
-        await ctx.respond_embed(f"Successfully added `{prefix}`.")
+        await ctx.success(f"Successfully added `{prefix}`.")
 
     @checks.has_guild_permissions(Permissions.MANAGE_GUILD)
     @prefix_group.command(name="remove", aliases=["delete"])
@@ -50,7 +50,7 @@ class Guild(Plugin):
         await ctx.bot.db.execute(
             "UPDATE guilds SET prefixes = array_remove(prefixes, $1) WHERE guild_id = $2", prefix, ctx.guild_id
         )
-        await ctx.respond_embed(f"Successfully removed `{prefix}`.")
+        await ctx.success(f"Successfully removed `{prefix}`.")
 
 
 def load(bot: Bot) -> None:
