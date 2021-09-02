@@ -63,7 +63,11 @@ class Bot(lightbulb.Bot):
         self.db = Database(self)
         self.embeds = Embeds()
         self.redis_cache = RedisCache(
-            self, self, address=self.config.REDIS_ADDRESS, password=self.config.REDIS_PASSWORD, ssl=False
+            self,
+            self,
+            address=self.config.REDIS_ADDRESS,
+            password=self.config.REDIS_PASSWORD,
+            ssl=False,
         )
 
     def get_context(self, *args: typing.Any, **kwargs: typing.Any) -> Context:
@@ -74,7 +78,11 @@ class Bot(lightbulb.Bot):
         self.log.setLevel(logging.INFO)
 
         file_handler = logging.handlers.TimedRotatingFileHandler(  # type: ignore
-            "./kangakari/data/logs/main.log", when="D", interval=3, encoding="utf-8", backupCount=10
+            "./kangakari/data/logs/main.log",
+            when="D",
+            interval=3,
+            encoding="utf-8",
+            backupCount=10,
         )
 
         formatter = logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: %(message)s")
@@ -117,7 +125,10 @@ class Bot(lightbulb.Bot):
 
     async def on_guild_available(self, event: events.GuildAvailableEvent) -> None:
         await self.db.wait_until_connected()
-        await self.db.execute("INSERT INTO guilds (guild_id) VALUES ($1) ON CONFLICT DO NOTHING", event.guild_id)
+        await self.db.execute(
+            "INSERT INTO guilds (guild_id) VALUES ($1) ON CONFLICT DO NOTHING",
+            event.guild_id,
+        )
 
     async def on_guild_leave(self, event: events.GuildLeaveEvent) -> None:
         await self.db.wait_until_connected()

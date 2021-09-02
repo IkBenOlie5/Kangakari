@@ -43,7 +43,7 @@ class Guild(Plugin):
         await ctx.success(f"Successfully added `{prefix}`.")
 
     @checks.has_guild_permissions(Permissions.MANAGE_GUILD)
-    @prefix_group.command(name="remove", aliases=["delete"])
+    @prefix_group.command(name="remove", aliases=["delete", "rm", "del"])
     async def prefix_remove_command(self, ctx: Context, *, prefix: str) -> None:
         """Remove a prefix from your guild."""
         await ctx.bot.redis_cache.delete_prefixes(ctx.guild_id, prefix)

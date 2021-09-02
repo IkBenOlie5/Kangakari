@@ -10,17 +10,23 @@ if typing.TYPE_CHECKING:
 
 class Context(Context):
     async def info(self, content: str, *args: typing.Any, **kwargs: typing.Any) -> Message:
-        embed = self.bot.embeds.build(ctx=self, description=content, color=self.bot.config.INFO_COLOR)
+        embed = self.bot.embeds.build(
+            ctx=self, title=":information_source:", description=content, color=self.bot.config.INFO_COLOR
+        )
         return await self.respond(embed=embed, *args, **kwargs)
 
     async def success(self, content: str, *args: typing.Any, **kwargs: typing.Any) -> Message:
-        embed = self.bot.embeds.build(ctx=self, description=content, color=self.bot.config.SUCCESS_COLOR)
+        embed = self.bot.embeds.build(
+            ctx=self, title=":white_check_mark:", description=content, color=self.bot.config.SUCCESS_COLOR
+        )
         return await self.respond(embed=embed, *args, **kwargs)
 
     async def warning(self, content: str, *args: typing.Any, **kwargs: typing.Any) -> Message:
-        embed = self.bot.embeds.build(ctx=self, description=content, color=self.bot.config.WARNING_COLOR)
+        embed = self.bot.embeds.build(
+            ctx=self, title=":warning:", description=content, color=self.bot.config.WARNING_COLOR
+        )
         return await self.respond(embed=embed, *args, **kwargs)
 
     async def error(self, content: str, *args: typing.Any, **kwargs: typing.Any) -> Message:
-        embed = self.bot.embeds.build(ctx=self, description=content, color=self.bot.config.ERROR_COLOR)
+        embed = self.bot.embeds.build(ctx=self, title=":x:", description=content, color=self.bot.config.ERROR_COLOR)
         return await self.respond(embed=embed, *args, **kwargs)
