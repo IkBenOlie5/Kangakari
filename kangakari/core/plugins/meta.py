@@ -25,16 +25,15 @@ class Meta(Plugin):
     @commands.command(name="invite", aliases=["inv"])
     async def invite_command(self, ctx: Context) -> None:
         """Get the link to invite the bot."""
+        bot_id = ctx.bot.cache.get_me().id
         await ctx.info(
-            f"[Admin Invite](https://discord.com/api/oauth2/authorize?client_id={ctx.bot.cache.get_me().id}&permissions=8&scope=applications.commands%20bot)"
+            f"[Admin Invite](https://discord.com/api/oauth2/authorize?client_id={bot_id}&permissions=8&scope=applications.commands%20bot) | [Non Admin Invite](https://discord.com/api/oauth2/authorize?client_id={bot_id}&permissions=103082478656&scope=applications.commands%20bot)"
         )
 
     @commands.command(name="source", aliases=["src"])
     async def source_command(self, ctx: Context, command: command_converter) -> None:
         """Get the code of a command."""
-        code = textwrap.dedent((inspect.getsource(command.callback))).replace(
-            "\x60", "\u02CB"
-        )
+        code = textwrap.dedent((inspect.getsource(command.callback))).replace("\x60", "\u02CB")
         await ctx.info(f"```py\n{code}```")
 
     @commands.command(name="ping")
@@ -56,9 +55,7 @@ class Meta(Plugin):
         name="guild_info",
         aliases=["guildinfo", "gi", "server_info", "serverinfo", "si"],
     )
-    async def guild_info_command(
-        self, ctx: Context, guild: typing.Optional[Guild] = None
-    ) -> None:
+    async def guild_info_command(self, ctx: Context, guild: typing.Optional[Guild] = None) -> None:
         """Get information about a guild."""
         guild = guild or ctx.guild
         guild_id = guild.id or ctx.guild_id
@@ -107,12 +104,8 @@ class Meta(Plugin):
             )
         )
 
-    @commands.command(
-        name="user_info", aliases=["userinfo", "ui", "member_info", "memberinfo", "mi"]
-    )
-    async def user_info_command(
-        self, ctx: Context, user: typing.Optional[User] = None
-    ) -> None:
+    @commands.command(name="user_info", aliases=["userinfo", "ui", "member_info", "memberinfo", "mi"])
+    async def user_info_command(self, ctx: Context, user: typing.Optional[User] = None) -> None:
         """Get information about a user."""
         user = user or ctx.author
         await ctx.respond(
@@ -132,16 +125,10 @@ class Meta(Plugin):
         )
 
     @commands.command(name="avatar", aliases=["av", "profile", "pf"])
-    async def avatar_command(
-        self, ctx: Context, user: typing.Optional[User] = None
-    ) -> None:
+    async def avatar_command(self, ctx: Context, user: typing.Optional[User] = None) -> None:
         """Get the avatar of a user."""
         user = user or ctx.author
-        await ctx.respond(
-            embed=ctx.bot.embeds.build(
-                ctx=ctx, image=user.avatar_url or user.default_avatar_url
-            )
-        )
+        await ctx.respond(embed=ctx.bot.embeds.build(ctx=ctx, image=user.avatar_url or user.default_avatar_url))
 
     @commands.command(name="bot_info", aliases=["botinfo", "bi", "about", "abt"])
     async def bot_info_command(self, ctx: Context) -> None:
@@ -166,9 +153,7 @@ class Meta(Plugin):
         )
 
     @commands.command(name="role_info", aliases=["roleinfo", "ri"])
-    async def role_info_command(
-        self, ctx: Context, role: typing.Optional[Role] = None
-    ) -> None:
+    async def role_info_command(self, ctx: Context, role: typing.Optional[Role] = None) -> None:
         """Get information about a role."""
         role = role or ctx.member.top_role
         await ctx.respond(
