@@ -51,7 +51,7 @@ class Embeds:
 
         self.embed.set_footer(
             text=self.footer or f"Invoked by: {self._ctx.author.username}",
-            icon=self._ctx.author.avatar_url or self._ctx.bot.me.avatar_url,
+            icon=self._ctx.author.avatar_url or self._ctx.bot.get_me().avatar_url,
         )
 
         self.embed.set_image(self.image)

@@ -133,6 +133,7 @@ class Meta(Plugin):
     @commands.command(name="bot_info", aliases=["botinfo", "bi", "about", "abt"])
     async def bot_info_command(self, ctx: Context) -> None:
         """Get information about the bot."""
+        bot_user = ctx.bot.get_me()
         await ctx.respond(
             embed=ctx.bot.embeds.build(
                 ctx=ctx,
@@ -148,7 +149,7 @@ class Meta(Plugin):
                         f"Lightbulb version: `{lightbulb_version}`",
                     ]
                 ),
-                thumbnail=ctx.bot.me.avatar_url or ctx.bot.me.default_avatar_url,
+                thumbnail=bot_user.avatar_url or bot_user.default_avatar_url,
             )
         )
 
