@@ -9,24 +9,26 @@ if typing.TYPE_CHECKING:
 
 
 class Context(Context):
-    async def info(self, content: str, *args: typing.Any, **kwargs: typing.Any) -> Message:
+    async def info(self, embed_description: str, text: str = "", *args: typing.Any, **kwargs: typing.Any) -> Message:
         embed = self.bot.embeds.build(
-            ctx=self, title=":information_source:", description=content, color=self.bot.config.INFO_COLOR
+            ctx=self, title=":information_source:", description=embed_description, color=self.bot.config.INFO_COLOR
         )
-        return await self.respond(embed=embed, *args, **kwargs)
+        return await self.respond(text, embed=embed, *args, **kwargs)
 
-    async def success(self, content: str, *args: typing.Any, **kwargs: typing.Any) -> Message:
+    async def success(self, embed_description: str, text: str = "", *args: typing.Any, **kwargs: typing.Any) -> Message:
         embed = self.bot.embeds.build(
-            ctx=self, title=":white_check_mark:", description=content, color=self.bot.config.SUCCESS_COLOR
+            ctx=self, title=":white_check_mark:", description=embed_description, color=self.bot.config.SUCCESS_COLOR
         )
-        return await self.respond(embed=embed, *args, **kwargs)
+        return await self.respond(text, embed=embed, *args, **kwargs)
 
-    async def warning(self, content: str, *args: typing.Any, **kwargs: typing.Any) -> Message:
+    async def warning(self, embed_description: str, text: str = "", *args: typing.Any, **kwargs: typing.Any) -> Message:
         embed = self.bot.embeds.build(
-            ctx=self, title=":warning:", description=content, color=self.bot.config.WARNING_COLOR
+            ctx=self, title=":warning:", description=embed_description, color=self.bot.config.WARNING_COLOR
         )
-        return await self.respond(embed=embed, *args, **kwargs)
+        return await self.respond(text, embed=embed, *args, **kwargs)
 
-    async def error(self, content: str, *args: typing.Any, **kwargs: typing.Any) -> Message:
-        embed = self.bot.embeds.build(ctx=self, title=":x:", description=content, color=self.bot.config.ERROR_COLOR)
-        return await self.respond(embed=embed, *args, **kwargs)
+    async def error(self, embed_description: str, text: str = "", *args: typing.Any, **kwargs: typing.Any) -> Message:
+        embed = self.bot.embeds.build(
+            ctx=self, title=":x:", description=embed_description, color=self.bot.config.ERROR_COLOR
+        )
+        return await self.respond(text, embed=embed, *args, **kwargs)

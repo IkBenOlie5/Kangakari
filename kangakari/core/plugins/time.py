@@ -25,7 +25,9 @@ class Time(Plugin):
 
     @staticmethod
     async def send_reminder(ctx: Context, text: str) -> None:
-        await ctx.info(f"Reminder for: {ctx.author.mention}\n{text}")
+        await ctx.info(
+            f"Reminder: `{text}`\nOriginal message: [jump]({ctx.message.make_link(ctx.guild_id)})", ctx.author.mention
+        )
 
     @commands.command(name="reminder", aliases=["remind"])
     async def reminder_command(self, ctx: Context, timedelta: timedelta_converter, *, text: str = "") -> None:
