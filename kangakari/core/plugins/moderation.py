@@ -40,7 +40,7 @@ class Moderation(Plugin):
         except errors.NotFoundError:
             await ctx.warning(f"User `{user.username}` is not banned from this guild.")
             return
-        await ctx.sucess(f"Unbanned `{user.username}`` for reason `{reason}`.")
+        await ctx.success(f"Unbanned `{user.username}`` for reason `{reason}`.")
 
     @checks.has_guild_permissions(Permissions.MANAGE_MESSAGES)
     @commands.command(name="clear", aliases=["purge"])
