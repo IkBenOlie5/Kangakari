@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import typing
 
 from hikari import Color
@@ -12,7 +10,7 @@ from datetime import datetime
 
 
 class Embeds:
-    def build(self, ctx: Context, **kwargs: typing.Any) -> Embed:
+    def build(self, ctx: "Context", **kwargs: typing.Any) -> Embed:
         self._ctx: Context = ctx
         self.fields: typing.Optional[typing.Sequence[typing.Tuple[str, str, bool]]] = kwargs.get("fields")
         self.title: typing.Optional[str] = kwargs.get("title")

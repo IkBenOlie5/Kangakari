@@ -1,10 +1,14 @@
 import datetime
+import typing
 
-from lightbulb import Bot
-from lightbulb import Context
 from lightbulb import Plugin
 from lightbulb import commands
 from pytz import utc
+
+if typing.TYPE_CHECKING:
+    from lightbulb import Bot
+
+    from lightbulb import Context
 
 from kangakari.core.utils import timedelta_converter
 from kangakari.core.utils import timezone_converter
@@ -15,7 +19,7 @@ class Time(Plugin):
 
     @commands.command(name="time_in", aliases=["timein", "ti"])
     async def time_in_command(
-        self, ctx: Context, timedelta: timedelta_converter, timezone: timezone_converter = utc
+        self, ctx: "Context", timedelta: timedelta_converter, timezone: timezone_converter = utc
     ) -> None:
         """Get the time."""
         unix = int(
@@ -24,13 +28,13 @@ class Time(Plugin):
         await ctx.info(f"It will be <t:{unix}:f>.")
 
     @staticmethod
-    async def send_reminder(ctx: Context, text: str) -> None:
+    async def send_reminder(ctx: "Context", text: str) -> None:
         await ctx.info(
             f"Reminder: `{text}`\nOriginal message: [jump]({ctx.message.make_link(ctx.guild_id)})", ctx.author.mention
         )
 
     @commands.command(name="reminder", aliases=["remind"])
-    async def reminder_command(self, ctx: Context, timedelta: timedelta_converter, *, text: str = "") -> None:
+    async def reminder_command(self, ctx: "Context", timedelta: timedelta_converter, *, text: str = "") -> None:
         """Create a reminder to help you."""
         ctx.bot.scheduler.add_job(
             self.send_reminder,
@@ -42,9 +46,9 @@ class Time(Plugin):
         await ctx.success("Created a reminder.")
 
 
-def load(bot: Bot) -> None:
+def load(bot: "Bot") -> None:
     bot.add_plugin(Time())
 
 
-def unload(bot: Bot) -> None:
+def unload(bot: "Bot") -> None:
     bot.remove_plugin("Time")

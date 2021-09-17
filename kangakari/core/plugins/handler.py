@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import typing
 
 from lightbulb import CommandErrorEvent
@@ -38,9 +36,9 @@ class Handler(Plugin):
             raise event.exception
 
 
-def load(bot: Bot) -> None:
+def load(bot: "Bot") -> None:
     bot.add_plugin(Handler())
 
 
-def unload(bot: Bot) -> None:
+def unload(bot: "Bot") -> None:
     bot.remove_plugin("Handler")

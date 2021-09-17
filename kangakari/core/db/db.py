@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import asyncio
 import logging
 import os
@@ -29,7 +27,7 @@ def acquire(func: typing.Callable[..., typing.Any]) -> typing.Callable[..., typi
 class Database:
     __slots__: typing.Sequence[str] = ("bot", "_connected", "_pool", "calls")
 
-    def __init__(self, bot: Bot) -> None:
+    def __init__(self, bot: "Bot") -> None:
         self.bot = bot
         self._connected = asyncio.Event()
         self.calls = 0

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import logging
 import typing
 
@@ -16,7 +14,7 @@ if typing.TYPE_CHECKING:
 class Debug(Plugin):
     """Utility commands only accessible by the owner."""
 
-    async def handle_plugins(self, ctx: Context, plugin_string: str, action: str) -> None:
+    async def handle_plugins(self, ctx: "Context", plugin_string: str, action: str) -> None:
         if plugin_string:
             plugins = plugin_string.split(" ")
         else:
@@ -37,33 +35,33 @@ class Debug(Plugin):
 
     @checks.owner_only()
     @commands.command(name="reload", hidden=True)
-    async def reload_command(self, ctx: Context, *, plugins: str = "") -> None:
+    async def reload_command(self, ctx: "Context", *, plugins: str = "") -> None:
         """Reload cogs."""
         await self.handle_plugins(ctx, plugins, "reload")
 
     @checks.owner_only()
     @commands.command(name="load", hidden=True)
-    async def load_command(self, ctx: Context, *, plugins: str = "") -> None:
+    async def load_command(self, ctx: "Context", *, plugins: str = "") -> None:
         """Load cogs."""
         await self.handle_plugins(ctx, plugins, "load")
 
     @checks.owner_only()
     @commands.command(name="unload", hidden=True)
-    async def unload_command(self, ctx: Context, *, plugins: str = "") -> None:
+    async def unload_command(self, ctx: "Context", *, plugins: str = "") -> None:
         """Unload cogs."""
         await self.handle_plugins(ctx, plugins, "unload")
 
     @checks.owner_only()
     @commands.command(name="shutdown", hidden=True)
-    async def shutdown_command(self, ctx: Context) -> None:
+    async def shutdown_command(self, ctx: "Context") -> None:
         """Shut the bot down."""
         await ctx.info("Shutting down.")
         await ctx.bot.close()
 
 
-def load(bot: Bot) -> None:
+def load(bot: "Bot") -> None:
     bot.add_plugin(Debug())
 
 
-def unload(bot: Bot) -> None:
+def unload(bot: "Bot") -> None:
     bot.remove_plugin("Debug")

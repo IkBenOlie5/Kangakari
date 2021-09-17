@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import logging
 import typing
 from pathlib import Path
@@ -110,7 +108,7 @@ class Bot(lightbulb.Bot):
         await self.session.close()
         logging.info("Closed aiohttp session.")
 
-    async def resolve_prefix(self, _: lightbulb.Bot, message: Message) -> typing.Union[typing.Sequence[str], str]:
+    async def resolve_prefix(self, _: lightbulb.Bot, message: "Message") -> typing.Union[typing.Sequence[str], str]:
         if message.guild_id is None:
             return self.config.DEFAULT_PREFIX
         try:

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import re
 import typing
 from datetime import timedelta
@@ -28,14 +26,14 @@ TIME_TO_SECONDS = {
 }
 
 
-async def timezone_converter(arg: WrappedArg) -> tzinfo:
+async def timezone_converter(arg: "WrappedArg") -> "tzinfo":
     try:
         return timezone(arg.data)
     except UnknownTimeZoneError:
         raise ConverterFailure
 
 
-async def timedelta_converter(arg: WrappedArg) -> timedelta:
+async def timedelta_converter(arg: "WrappedArg") -> timedelta:
     parts = TIMEDELTA_REGEX.match(arg.data)
     if parts is None:
         raise ConverterFailure
@@ -49,7 +47,7 @@ async def timedelta_converter(arg: WrappedArg) -> timedelta:
     return timedelta(seconds=seconds)
 
 
-async def command_converter(arg: WrappedArg) -> Command:
+async def command_converter(arg: "WrappedArg") -> "Command":
     command = arg.context.bot.get_command(arg.data)
     if command is None:
         raise ConverterFailure

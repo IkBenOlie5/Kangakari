@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import typing
 
 from lightbulb import Plugin
@@ -16,7 +14,7 @@ class NSFW(Plugin):
 
     @checks.nsfw_channel_only()
     @commands.command(name="rule34", aliases=["r34"])
-    async def rule34_command(self, ctx: Context, *, tags: str = "") -> None:
+    async def rule34_command(self, ctx: "Context", *, tags: str = "") -> None:
         """Search rule34.xxx for a post."""
         async with ctx.bot.session.get(
             "https://r34-json-api.herokuapp.com/posts/", params={"limit": 1, "tags": tags.replace(" ", "+")}
@@ -38,7 +36,7 @@ class NSFW(Plugin):
 
     @checks.nsfw_channel_only()
     @commands.command(name="porn", aliases=["prn"])
-    async def porn_command(self, ctx: Context, *, query: str = "") -> None:
+    async def porn_command(self, ctx: "Context", *, query: str = "") -> None:
         """Search eporner.com for a video."""
         async with ctx.bot.session.get(
             "https://www.eporner.com/api/v2/video/search/", params={"per_page": 1, "query": query.replace(" ", "+")}
@@ -57,9 +55,9 @@ class NSFW(Plugin):
         )
 
 
-def load(bot: Bot) -> None:
+def load(bot: "Bot") -> None:
     bot.add_plugin(NSFW())
 
 
-def unload(bot: Bot) -> None:
+def unload(bot: "Bot") -> None:
     bot.remove_plugin("NSFW")

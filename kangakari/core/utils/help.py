@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import typing
 from operator import attrgetter
 
@@ -14,18 +12,18 @@ if typing.TYPE_CHECKING:
 
 
 class Help(help.HelpCommand):
-    async def object_not_found(self, ctx: Context, name: str) -> None:
+    async def object_not_found(self, ctx: "Context", name: str) -> None:
         await ctx.warning(f"`{name}` is not a valid plugin, command or group.")
 
     @staticmethod
-    async def check_runnable(ctx: Context, cmd: typing.Union[Command, Group]) -> bool:
+    async def check_runnable(ctx: "Context", cmd: typing.Union["Command", "Group"]) -> bool:
         try:
             await cmd.is_runnable(ctx)
             return True
         except CheckFailure:
             return False
 
-    async def send_help_overview(self, ctx: Context) -> None:
+    async def send_help_overview(self, ctx: "Context") -> None:
         plugin_commands = [
             [plugin.name, await help.filter_commands(ctx, plugin._commands.values())]
             for plugin in self.bot.plugins.values()
@@ -33,9 +31,7 @@ class Help(help.HelpCommand):
         all_plugin_commands = []
         for _, commands in plugin_commands:
             all_plugin_commands.extend(commands)
-        uncategorised_commands = await help.filter_commands(
-            ctx, self.bot.commands.difference(set(all_plugin_commands))
-        )
+        uncategorised_commands = await help.filter_commands(ctx, self.bot.commands.difference(set(all_plugin_commands)))
         plugin_commands.insert(0, ["Uncategorised", uncategorised_commands])
 
         help_text = ["> __**Bot help**__\n"]
@@ -49,7 +45,7 @@ class Help(help.HelpCommand):
         help_text.append(f"\n> Use `{ctx.clean_prefix}help [command]` for more information.")
         await ctx.info("\n".join(help_text))
 
-    async def send_plugin_help(self, ctx: Context, plugin: Plugin) -> None:
+    async def send_plugin_help(self, ctx: "Context", plugin: "Plugin") -> None:
         await ctx.info(
             "\n".join(
                 [
@@ -66,7 +62,7 @@ class Help(help.HelpCommand):
             )
         )
 
-    async def send_command_help(self, ctx: Context, cmd: Command) -> None:
+    async def send_command_help(self, ctx: "Context", cmd: "Command") -> None:
         await ctx.info(
             "\n".join(
                 [
@@ -79,7 +75,7 @@ class Help(help.HelpCommand):
             ),
         )
 
-    async def send_group_help(self, ctx: Context, group: Group) -> None:
+    async def send_group_help(self, ctx: "Context", group: "Group") -> None:
         await ctx.info(
             "\n".join(
                 [

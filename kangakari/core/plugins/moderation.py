@@ -1,15 +1,17 @@
 import typing
 
-from hikari import GuildTextChannel
-from hikari import Member
 from hikari import Permissions
-from hikari import User
 from hikari import errors
-from lightbulb import Bot
-from lightbulb import Context
 from lightbulb import Plugin
 from lightbulb import checks
 from lightbulb import commands
+
+if typing.TYPE_CHECKING:
+    from hikari import GuildTextChannel
+    from hikari import Member
+    from hikari import User
+    from lightbulb import Bot
+    from lightbulb import Context
 
 
 class Moderation(Plugin):
@@ -17,21 +19,21 @@ class Moderation(Plugin):
 
     @checks.has_guild_permissions(Permissions.KICK_MEMBERS)
     @commands.command(name="kick")
-    async def kick_command(self, ctx: Context, member: Member, *, reason: str = "No reason provided.") -> None:
+    async def kick_command(self, ctx: "Context", member: "Member", *, reason: str = "No reason provided.") -> None:
         """Kick a member."""
         await member.kick(reason=reason)
         await ctx.sucess(f"Kicked `{member.display_name}`` for reason `{reason}`.")
 
     @checks.has_guild_permissions(Permissions.BAN_MEMBERS)
     @commands.command(name="ban")
-    async def ban_command(self, ctx: Context, member: Member, *, reason: str = "No reason provided.") -> None:
+    async def ban_command(self, ctx: "Context", member: "Member", *, reason: str = "No reason provided.") -> None:
         """Ban a member."""
         await member.ban(reason=reason)
         await ctx.sucess(f"Banned `{member.display_name}`` for reason `{reason}`.")
 
     @checks.has_guild_permissions(Permissions.BAN_MEMBERS)
     @commands.command(name="unban")
-    async def unban_command(self, ctx: Context, user: User, *, reason: str = "No reason provided.") -> None:
+    async def unban_command(self, ctx: "Context", user: "User", *, reason: str = "No reason provided.") -> None:
         """Unban a user."""
         try:
             await ctx.guild.unban(user=user.id, reason=reason)
@@ -42,7 +44,7 @@ class Moderation(Plugin):
 
     @checks.has_guild_permissions(Permissions.MANAGE_MESSAGES)
     @commands.command(name="clear", aliases=["purge"])
-    async def clear_command(self, ctx: Context, amount: int = 1) -> None:
+    async def clear_command(self, ctx: "Context", amount: int = 1) -> None:
         """Clear messages."""
         messages = list(await ctx.channel.fetch_history().limit(amount + 1))
         try:
@@ -52,7 +54,7 @@ class Moderation(Plugin):
 
     @checks.has_guild_permissions(Permissions.MANAGE_MESSAGES)
     @commands.command(name="clear_channel", aliases=["clearchannel", "cc"])
-    async def clear_channel_command(self, ctx: Context, channel: typing.Optional[GuildTextChannel]) -> None:
+    async def clear_channel_command(self, ctx: "Context", channel: typing.Optional["GuildTextChannel"]) -> None:
         """Clear an entire channel."""
         channel = channel or ctx.channel
         await ctx.guild.create_text_channel(
@@ -69,16 +71,16 @@ class Moderation(Plugin):
 
     @checks.has_guild_permissions(Permissions.MANAGE_NICKNAMES)
     @commands.command(name="nick")
-    async def nick_command(self, ctx: Context, member: Member, *, nick: str = "nameless") -> None:
+    async def nick_command(self, ctx: "Context", member: "Member", *, nick: str = "nameless") -> None:
         """Nick a member."""
         old = member.nickname
         await member.edit(nick=nick)
         await ctx.success(f"Nicked `{old}` to `{nick}`.")
 
 
-def load(bot: Bot) -> None:
+def load(bot: "Bot") -> None:
     bot.add_plugin(Moderation())
 
 
-def unload(bot: Bot) -> None:
+def unload(bot: "Bot") -> None:
     bot.remove_plugin("Moderation")
