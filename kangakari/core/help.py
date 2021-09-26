@@ -6,7 +6,7 @@ from lightbulb.errors import CheckFailure
 
 if typing.TYPE_CHECKING:
     from lightbulb import Command
-    from kangakari.utils import Context
+    from kangakari.core import Context
     from lightbulb import Group
     from lightbulb import Plugin
 

@@ -7,8 +7,8 @@ from lightbulb import commands
 from lightbulb import errors
 
 if typing.TYPE_CHECKING:
-    from kangakari.core import Bot
-    from kangakari.utils import Context
+    from kangakari import Bot
+    from kangakari.core import Context
 
 
 class Debug(Plugin):

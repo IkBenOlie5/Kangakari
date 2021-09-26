@@ -7,8 +7,8 @@ from lightbulb import commands
 from sake.errors import EntryNotFound
 
 if typing.TYPE_CHECKING:
-    from kangakari.core import Bot
-    from kangakari.utils import Context
+    from kangakari import Bot
+    from kangakari.core import Context
 
 
 class Guild(Plugin):

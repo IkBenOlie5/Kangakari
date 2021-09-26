@@ -4,7 +4,7 @@ from hikari import Color
 from hikari import Embed
 
 if typing.TYPE_CHECKING:
-    from kangakari.utils import Context
+    from kangakari.core import Context
 
 from datetime import datetime
 

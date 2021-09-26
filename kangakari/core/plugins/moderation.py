@@ -10,8 +10,8 @@ if typing.TYPE_CHECKING:
     from hikari import GuildTextChannel
     from hikari import Member
     from hikari import User
-    from kangakari.core import Bot
-    from kangakari.utils import Context
+    from kangakari import Bot
+    from kangakari.core import Context
 
 
 class Moderation(Plugin):

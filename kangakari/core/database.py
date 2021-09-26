@@ -8,7 +8,7 @@ import aiofiles
 import asyncpg
 
 if typing.TYPE_CHECKING:
-    from kangakari.core import Bot
+    from kangakari import Bot
 
 
 def acquire(func: typing.Callable[..., typing.Any]) -> typing.Callable[..., typing.Any]:

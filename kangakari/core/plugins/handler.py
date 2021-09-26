@@ -6,7 +6,7 @@ from lightbulb import errors
 from lightbulb import listener
 
 if typing.TYPE_CHECKING:
-    from kangakari.core import Bot
+    from kangakari import Bot
 
 
 class Handler(Plugin):

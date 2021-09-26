@@ -1,4 +1,4 @@
-from kangakari.core import Bot
+from .bot import Bot
 
 __version__ = "0.0.1"
 __all__ = ["__version__", "Bot"]

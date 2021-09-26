@@ -11,12 +11,12 @@ from hikari import events
 from sake import redis
 from sake.errors import EntryNotFound
 
+from kangakari.core import Config
+from kangakari.core import Context
+from kangakari.core import Database
+from kangakari.core import Embeds
+from kangakari.core import Help
 from kangakari.core.plugins.music import EventHandler
-from kangakari.utils import Config
-from kangakari.utils import Context
-from kangakari.utils import Database
-from kangakari.utils import Embeds
-from kangakari.utils import Help
 
 if typing.TYPE_CHECKING:
     from hikari import Message

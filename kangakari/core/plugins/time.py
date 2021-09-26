@@ -6,12 +6,12 @@ from lightbulb import commands
 from pytz import utc
 
 if typing.TYPE_CHECKING:
-    from kangakari.core import Bot
+    from kangakari import Bot
 
-    from kangakari.utils import Context
+    from kangakari.core import Context
 
-from kangakari.utils import timedelta_converter
-from kangakari.utils import timezone_converter
+from kangakari.core import timedelta_converter
+from kangakari.core import timezone_converter
 
 
 class Time(Plugin):

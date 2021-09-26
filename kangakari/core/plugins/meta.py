@@ -9,8 +9,8 @@ from hikari import Permissions
 from hikari import __version__ as hikari_version
 
 if typing.TYPE_CHECKING:
-    from kangakari.utils import Context
-    from kangakari.core import Bot
+    from kangakari.core import Context
+    from kangakari import Bot
     from hikari import Role
     from hikari import User
     from hikari import Guild
@@ -19,7 +19,7 @@ from lightbulb import Plugin
 from lightbulb import __version__ as lightbulb_version
 from lightbulb import commands
 
-from kangakari.utils import command_converter
+from kangakari.core import command_converter
 
 
 class Meta(Plugin):

@@ -9,8 +9,8 @@ from lightbulb import listener
 
 if typing.TYPE_CHECKING:
     from hikari import Snowflake
-    from kangakari.core import Bot
-    from kangakari.utils import Context
+    from kangakari import Bot
+    from kangakari.core import Context
 
 
 class EventHandler:
