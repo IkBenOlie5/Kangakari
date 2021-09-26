@@ -2,6 +2,7 @@ import logging
 import typing
 from pathlib import Path
 
+import lavasnek_rs
 import lightbulb
 from aiohttp import ClientSession
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -10,11 +11,12 @@ from hikari import events
 from sake import redis
 from sake.errors import EntryNotFound
 
-from kangakari.core.db import Database
-from kangakari.core.utils import Config
-from kangakari.core.utils import Context
-from kangakari.core.utils import Embeds
-from kangakari.core.utils import Help
+from kangakari.core.plugins.music import EventHandler
+from kangakari.utils import Config
+from kangakari.utils import Context
+from kangakari.utils import Database
+from kangakari.utils import Embeds
+from kangakari.utils import Help
 
 if typing.TYPE_CHECKING:
     from hikari import Message
@@ -67,6 +69,7 @@ class Bot(lightbulb.Bot):
             password=self.config.REDIS_PASSWORD,
             ssl=False,
         )
+        self.lavalink: typing.Optional[lavasnek_rs.Lavalink] = None
 
     def get_context(self, *args: typing.Any, **kwargs: typing.Any) -> Context:
         return Context(self, *args, **kwargs)
@@ -102,6 +105,13 @@ class Bot(lightbulb.Bot):
     async def on_started(self, _: events.StartedEvent) -> None:
         self.scheduler.start()
 
+        builder = (
+            lavasnek_rs.LavalinkBuilder(self.get_me().id, self.config.TOKEN)
+            .set_host("127.0.0.1")
+            .set_password(self.config.LAVALINK_PASSWORD)
+        )
+        self.lavalink = await builder.build(EventHandler())
+
     async def on_stopping(self, _: events.StoppingEvent) -> None:
         self.scheduler.shutdown()
         await self.db.close()
@@ -121,18 +131,18 @@ class Bot(lightbulb.Bot):
             )
         return prefixes
 
-    async def on_guild_available(self, event: events.GuildAvailableEvent) -> None:
+    async def on_guild_available(self, e: events.GuildAvailableEvent) -> None:
         await self.db.wait_until_connected()
         await self.db.execute(
             "INSERT INTO guilds (guild_id) VALUES ($1) ON CONFLICT DO NOTHING",
-            event.guild_id,
+            e.guild_id,
         )
 
-    async def on_guild_leave(self, event: events.GuildLeaveEvent) -> None:
+    async def on_guild_leave(self, e: events.GuildLeaveEvent) -> None:
         await self.db.wait_until_connected()
-        await self.db.execute("DELETE FROM guilds WHERE guild_id = $1", event.guild_id)
+        await self.db.execute("DELETE FROM guilds WHERE guild_id = $1", e.guild_id)
 
-    async def on_guild_message_create(self, event: events.GuildMessageCreateEvent) -> None:
+    async def on_guild_message_create(self, e: events.GuildMessageCreateEvent) -> None:
         """await self.db.wait_until_connected()
-        if not event.author_id == self.me.id:
-            await self.db.execute("INSERT INTO users (user_id) VALUES ($1) ON CONFLICT DO NOTHING", event.author_id)"""
+        if not e.author_id == self.me.id:
+            await self.db.execute("INSERT INTO users (user_id) VALUES ($1) ON CONFLICT DO NOTHING", e.author_id)"""

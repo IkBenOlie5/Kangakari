@@ -5,8 +5,8 @@ from lightbulb import checks
 from lightbulb import commands
 
 if typing.TYPE_CHECKING:
-    from lightbulb import Bot
-    from lightbulb import Context
+    from kangakari.core import Bot
+    from kangakari.utils import Context
 
 
 class NSFW(Plugin):

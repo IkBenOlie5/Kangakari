@@ -6,9 +6,11 @@ from kangakari import __version__
 
 def main() -> None:
     if os.name != "nt":
-        import uvloop
+        # uvloop doesn't work with lavasnek_rs yet
+        """import uvloop
 
         uvloop.install()
+        """
 
     bot = Bot(__version__)
     bot.run(asyncio_debug=True)
