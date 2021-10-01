@@ -14,6 +14,8 @@ if typing.TYPE_CHECKING:
 class Debug(Plugin):
     """Utility commands only accessible by the owner."""
 
+    __slots__ = ()
+
     async def handle_plugins(self, ctx: "Context", plugin_string: str, action: str) -> None:
         if plugin_string:
             plugins = plugin_string.split(" ")
@@ -24,12 +26,12 @@ class Debug(Plugin):
         for plugin in plugins:
             try:
                 getattr(ctx.bot, f"{action}_extension")(f"kangakari.core.plugins.{plugin.lower()}")
-                logging.info(f"Plugin '{plugin}' has been {action}ed.")
+                logging.info("Plugin '%s' has been %sed.", plugin, action)
                 count += 1
             except errors.ExtensionAlreadyLoaded:
-                logging.error(f"Plugin '{plugin}' is already loaded.")
+                logging.error("Plugin '%s' is already loaded.", plugin)
             except errors.ExtensionNotLoaded:
-                logging.error(f"Plugin '{plugin}' is not currently loaded.")
+                logging.error("Plugin '%s' is not currently loaded.", plugin)
 
         await ctx.success(f"{count} extension(s) {action}ed.")
 

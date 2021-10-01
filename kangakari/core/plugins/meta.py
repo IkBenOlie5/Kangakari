@@ -25,6 +25,8 @@ from kangakari.core import command_converter
 class Meta(Plugin):
     """Utility commands."""
 
+    __slots__ = ()
+
     @commands.command(name="invite", aliases=["inv"])
     async def invite_command(self, ctx: "Context") -> None:
         """Get the link to invite the bot."""

@@ -12,6 +12,8 @@ if typing.TYPE_CHECKING:
 class Handler(Plugin):
     """Error handler."""
 
+    __slots__ = ()
+
     @listener(event_type=CommandErrorEvent)
     async def on_command_error(self, e: CommandErrorEvent) -> None:
         if isinstance(e.exception, (errors.CommandNotFound)):

@@ -10,6 +10,20 @@ from datetime import datetime
 
 
 class Embeds:
+    __slots__ = (
+        "_ctx",
+        "fields",
+        "title",
+        "desc",
+        "footer",
+        "author",
+        "author_icon",
+        "thumbnail",
+        "image",
+        "color",
+        "time",
+    )
+
     def build(self, ctx: "Context", **kwargs: typing.Any) -> Embed:
         self._ctx: Context = ctx
         self.fields: typing.Optional[typing.Sequence[typing.Tuple[str, str, bool]]] = kwargs.get("fields")

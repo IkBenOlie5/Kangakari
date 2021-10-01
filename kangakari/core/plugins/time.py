@@ -17,6 +17,8 @@ from kangakari.core import timezone_converter
 class Time(Plugin):
     """Time commands."""
 
+    __slots__ = ()
+
     @commands.command(name="time_in", aliases=["timein", "ti"])
     async def time_in_command(
         self, ctx: "Context", timedelta: timedelta_converter, timezone: timezone_converter = utc

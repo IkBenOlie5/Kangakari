@@ -9,12 +9,15 @@ from lightbulb import listener
 
 if typing.TYPE_CHECKING:
     from hikari import Snowflake
+
     from kangakari import Bot
     from kangakari.core import Context
 
 
 class EventHandler:
     """Events from the Lavalink server"""
+
+    __slots__ = ()
 
     async def track_start(self, _, e):
         logging.info("Track started on guild: %s", e.guild_id)
@@ -24,6 +27,8 @@ class EventHandler:
 
 
 class Music(Plugin):
+    __slots__ = ("bot",)
+
     def __init__(self, bot: "Bot") -> None:
         super().__init__()
         self.bot = bot

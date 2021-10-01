@@ -12,6 +12,8 @@ if typing.TYPE_CHECKING:
 class NSFW(Plugin):
     """Commands that can only be run in NSFW channels."""
 
+    __slots__ = ()
+
     @checks.nsfw_channel_only()
     @commands.command(name="rule34", aliases=["r34"])
     async def rule34_command(self, ctx: "Context", *, tags: str = "") -> None:

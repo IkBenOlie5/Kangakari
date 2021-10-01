@@ -6,12 +6,15 @@ from lightbulb.errors import CheckFailure
 
 if typing.TYPE_CHECKING:
     from lightbulb import Command
-    from kangakari.core import Context
     from lightbulb import Group
     from lightbulb import Plugin
 
+    from kangakari.core import Context
+
 
 class Help(help.HelpCommand):
+    __slots__ = ()
+
     async def object_not_found(self, ctx: "Context", name: str) -> None:
         await ctx.warning(f"`{name}` is not a valid plugin, command or group.")
 

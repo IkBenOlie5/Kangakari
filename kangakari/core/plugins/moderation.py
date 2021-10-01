@@ -10,12 +10,15 @@ if typing.TYPE_CHECKING:
     from hikari import GuildTextChannel
     from hikari import Member
     from hikari import User
+
     from kangakari import Bot
     from kangakari.core import Context
 
 
 class Moderation(Plugin):
     """Commands for moderating your guild."""
+
+    __slots__ = ()
 
     @checks.has_guild_permissions(Permissions.KICK_MEMBERS)
     @commands.command(name="kick")

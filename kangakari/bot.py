@@ -23,10 +23,23 @@ if typing.TYPE_CHECKING:
 
 
 class RedisCache(redis.PrefixCache, redis.RedisCache):
-    pass
+    __slots__ = ()
 
 
 class Bot(lightbulb.Bot):
+    __slots__ = (
+        "_plugins",
+        "_dynamic",
+        "_static",
+        "version",
+        "config",
+        "scheduler",
+        "db",
+        "embeds",
+        "redis_cache",
+        "lavalink",
+    )
+
     def __init__(self, version: str) -> None:
         self._plugins = [p.stem for p in Path(".").glob("./kangakari/core/plugins/*.py")]
         self._dynamic = "./kangakari/data/dynamic"
@@ -98,9 +111,9 @@ class Bot(lightbulb.Bot):
         for plugin in self._plugins:
             try:
                 self.load_extension(f"kangakari.core.plugins.{plugin}")
-                logging.info(f"Plugin '{plugin}' has been loaded.")
+                logging.info("Plugin '%s' has been loaded.", plugin)
             except lightbulb.errors.ExtensionMissingLoad:
-                logging.error(f"Plugin '{plugin}' is missing a load function.")
+                logging.error("Plugin '%s' is missing a load function.", plugin)
 
     async def on_started(self, _: events.StartedEvent) -> None:
         self.scheduler.start()

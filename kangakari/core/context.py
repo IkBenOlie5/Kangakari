@@ -7,6 +7,8 @@ if typing.TYPE_CHECKING:
 
 
 class Context(Context):
+    __slots__ = ()
+
     async def info(self, embed_description: str, text: str = "", *args: typing.Any, **kwargs: typing.Any) -> "Message":
         embed = self.bot.embeds.build(
             ctx=self, title=":information_source:", description=embed_description, color=self.bot.config.INFO_COLOR

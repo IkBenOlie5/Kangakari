@@ -14,6 +14,8 @@ if typing.TYPE_CHECKING:
 class Guild(Plugin):
     """Commands to setup the bot for your guild."""
 
+    __slots__ = ()
+
     async def plugin_check(self, ctx: "Context") -> bool:
         if ctx.guild_id is None:
             await ctx.error("This command can only be executed inside servers.")
