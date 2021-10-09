@@ -4,6 +4,7 @@ hikari-lightbulb==1.2.1
 git+https://github.com/FasterSpeeding/Sake@task/raw-dispatch
 apscheduler==3.7.0
 aiofiles==0.7.0
+types-aiofiles==0.1.9
 asyncpg==0.24.0
 uvloop==0.16.0
 lavasnek_rs==0.1.0a0

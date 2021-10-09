@@ -22,6 +22,7 @@ class Embeds:
         "image",
         "color",
         "time",
+        "embed",
     )
 
     def build(self, ctx: "Context", **kwargs: typing.Any) -> Embed:

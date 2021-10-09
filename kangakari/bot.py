@@ -82,7 +82,7 @@ class Bot(lightbulb.Bot):
             password=self.config.REDIS_PASSWORD,
             ssl=False,
         )
-        self.lavalink: typing.Optional[lavasnek_rs.Lavalink] = None
+        self.lavalink: lavasnek_rs.Lavalink = None
 
     def get_context(self, *args: typing.Any, **kwargs: typing.Any) -> Context:
         return Context(self, *args, **kwargs)
@@ -123,6 +123,7 @@ class Bot(lightbulb.Bot):
             .set_host("127.0.0.1")
             .set_password(self.config.LAVALINK_PASSWORD)
         )
+        builder.set_start_gateway(False)
         self.lavalink = await builder.build(EventHandler())
 
     async def on_stopping(self, _: events.StoppingEvent) -> None:
