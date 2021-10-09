@@ -32,7 +32,10 @@ class Meta(Plugin):
         """Get the link to invite the bot."""
         bot_id = ctx.bot.cache.get_me().id
         await ctx.info(
-            f"[Admin Invite](https://discord.com/api/oauth2/authorize?client_id={bot_id}&permissions=8&scope=applications.commands%20bot) | [Non Admin Invite](https://discord.com/api/oauth2/authorize?client_id={bot_id}&permissions=103082478656&scope=applications.commands%20bot)"
+            f"[Admin Invite](https://discord.com/api/oauth2/authorize?client_id={bot_id}"
+            "&permissions=8&scope=applications.commands%20bot) | "
+            f"[Non Admin Invite](https://discord.com/api/oauth2/authorize?client_id={bot_id}"
+            "&permissions=103082478656&scope=applications.commands%20bot)"
         )
 
     @commands.command(name="source", aliases=["src"])

@@ -1,12 +1,12 @@
 import typing
 
-from lightbulb import Context
+from lightbulb import Context as Context_
 
 if typing.TYPE_CHECKING:
     from hikari import Message
 
 
-class Context(Context):
+class Context(Context_):
     __slots__ = ()
 
     async def info(self, embed_description: str, text: str = "", *args: typing.Any, **kwargs: typing.Any) -> "Message":
