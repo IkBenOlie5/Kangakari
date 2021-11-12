@@ -19,6 +19,7 @@ from lightbulb import Plugin
 from lightbulb import __version__ as lightbulb_version
 from lightbulb import commands
 
+from kangakari.core import Config
 from kangakari.core import command_converter
 
 
@@ -55,7 +56,7 @@ class Meta(Plugin):
             embed=ctx.bot.embeds.build(
                 ctx=ctx,
                 description=f"**Gateway**: {ctx.bot.heartbeat_latency * 1000:,.0f} ms\n**REST**: {(end - start) * 1000:,.0f} ms",
-                color=ctx.bot.config.INFO_COLOR,
+                color=Config.INFO_COLOR,
             )
         )
 
@@ -102,7 +103,8 @@ class Meta(Plugin):
                             [
                                 f":sound:Voice: `{len([cs[c_id] for c_id in cs if cs[c_id].type == ChannelType.GUILD_VOICE])}`",
                                 f":underage:NSFW: `{len([cs[c_id] for c_id in cs if cs[c_id].is_nsfw])}`",
-                                f":speech_balloon:Text: `{len([cs[c_id] for c_id in cs if cs[c_id].type == ChannelType.GUILD_TEXT])}`",
+                                ":speech_balloon:Text: ",
+                                f"`{len([cs[c_id] for c_id in cs if cs[c_id].type == ChannelType.GUILD_TEXT])}`",
                             ]
                         ),
                         True,

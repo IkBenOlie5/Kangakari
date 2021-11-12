@@ -8,6 +8,8 @@ if typing.TYPE_CHECKING:
 
 from datetime import datetime
 
+from kangakari.core import Config
+
 
 class Embeds:
     __slots__ = (
@@ -49,7 +51,7 @@ class Embeds:
             title=self.title,
             description=self.desc,
             timestamp=self.time,
-            color=self.color or Color.from_hex_code(self._ctx.bot.config.EMBED_COLOR),
+            color=self.color or Color.from_hex_code(Config.EMBED_COLOR),
         )
 
     def plus_fields(self) -> None:

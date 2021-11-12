@@ -35,25 +35,25 @@ class Debug(Plugin):
 
         await ctx.success(f"{count} extension(s) {action}ed.")
 
-    @checks.owner_only()
+    @checks.check(checks.owner_only)
     @commands.command(name="reload", hidden=True)
     async def reload_command(self, ctx: "Context", *, plugins: str = "") -> None:
         """Reload cogs."""
         await self.handle_plugins(ctx, plugins, "reload")
 
-    @checks.owner_only()
+    @checks.check(checks.owner_only)
     @commands.command(name="load", hidden=True)
     async def load_command(self, ctx: "Context", *, plugins: str = "") -> None:
         """Load cogs."""
         await self.handle_plugins(ctx, plugins, "load")
 
-    @checks.owner_only()
+    @checks.check(checks.owner_only)
     @commands.command(name="unload", hidden=True)
     async def unload_command(self, ctx: "Context", *, plugins: str = "") -> None:
         """Unload cogs."""
         await self.handle_plugins(ctx, plugins, "unload")
 
-    @checks.owner_only()
+    @checks.check(checks.owner_only)
     @commands.command(name="shutdown", hidden=True)
     async def shutdown_command(self, ctx: "Context") -> None:
         """Shut the bot down."""

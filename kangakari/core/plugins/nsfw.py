@@ -7,6 +7,7 @@ from lightbulb import commands
 if typing.TYPE_CHECKING:
     from kangakari import Bot
     from kangakari.core import Context
+from kangakari.core import Config
 
 
 class NSFW(Plugin):
@@ -14,7 +15,7 @@ class NSFW(Plugin):
 
     __slots__ = ()
 
-    @checks.nsfw_channel_only()
+    @checks.check(checks.nsfw_channel_only)
     @commands.command(name="rule34", aliases=["r34"])
     async def rule34_command(self, ctx: "Context", *, tags: str = "") -> None:
         """Search rule34.xxx for a post."""
@@ -31,12 +32,12 @@ class NSFW(Plugin):
                 ctx=ctx,
                 description=f"[Original Post]({post['file_url']})",
                 image=post["file_url"],
-                color=ctx.bot.config.SUCCESS_COLOR,
+                color=Config.SUCCESS_COLOR,
             )
         )
         # TODO: this doesn't work if the file url is for a video
 
-    @checks.nsfw_channel_only()
+    @checks.check(checks.nsfw_channel_only)
     @commands.command(name="porn", aliases=["prn"])
     async def porn_command(self, ctx: "Context", *, query: str = "") -> None:
         """Search eporner.com for a video."""
@@ -52,7 +53,7 @@ class NSFW(Plugin):
                 ctx=ctx,
                 description=f"[Original Video]({video['url']})",
                 image=video["default_thumb"]["src"],
-                color=ctx.bot.config.SUCCESS_COLOR,
+                color=Config.SUCCESS_COLOR,
             )
         )
 

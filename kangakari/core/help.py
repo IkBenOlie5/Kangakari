@@ -34,8 +34,8 @@ class Help(help.HelpCommand):
         all_plugin_commands = []
         for _, commands in plugin_commands:
             all_plugin_commands.extend(commands)
-        uncategorised_commands = await help.filter_commands(ctx, self.bot.commands.difference(set(all_plugin_commands)))
-        plugin_commands.insert(0, ["Uncategorised", uncategorised_commands])
+        uncategorized_commands = await help.filter_commands(ctx, self.bot.commands.difference(set(all_plugin_commands)))
+        plugin_commands.insert(0, ["Uncategorized", uncategorized_commands])
 
         help_text = ["> __**Bot help**__\n"]
         for plugin, commands in plugin_commands:

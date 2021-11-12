@@ -10,6 +10,8 @@ import asyncpg
 if typing.TYPE_CHECKING:
     from kangakari import Bot
 
+from kangakari.core import Config
+
 
 def acquire(func: typing.Callable[..., typing.Any]) -> typing.Callable[..., typing.Any]:
     @wraps(func)
@@ -46,7 +48,7 @@ class Database:
 
     async def connect(self) -> None:
         assert not self.is_connected, "Already connected."
-        self._pool: asyncpg.Pool = await asyncpg.create_pool(dsn=self.bot.config.DB_DSN)
+        self._pool: asyncpg.Pool = await asyncpg.create_pool(dsn=Config.DB_DSN)
         self._connected.set()
         logging.info("Connected to database.")
 
@@ -59,7 +61,7 @@ class Database:
         logging.info("Closed database connection.")
 
     async def sync(self) -> None:
-        await self.execute_script(os.path.join(self.bot._static, "script.sql"), self.bot.config.DEFAULT_PREFIX)
+        await self.execute_script(os.path.join(self.bot._static, "script.sql"), Config.DEFAULT_PREFIX)
         await self.execute_many(
             "INSERT INTO guilds (guild_id) VALUES ($1) ON CONFLICT DO NOTHING",
             [(guild,) for guild in self.bot.cache.get_available_guilds_view()],

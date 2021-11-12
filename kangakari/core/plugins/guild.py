@@ -32,7 +32,7 @@ class Guild(Plugin):
         prefixes.append("@mention (can't be removed)")
         await ctx.info("The current prefixes are: ```\n" + "\n".join(prefixes) + "```")
 
-    @checks.has_guild_permissions(Permissions.MANAGE_GUILD)
+    @checks.check(checks.has_guild_permissions(Permissions.MANAGE_GUILD))
     @prefix_group.command(name="add")
     async def prefix_add_command(self, ctx: "Context", *, prefix: str) -> None:
         """Add a prefix to your guild."""
@@ -42,7 +42,7 @@ class Guild(Plugin):
         )
         await ctx.success(f"Successfully added `{prefix}`.")
 
-    @checks.has_guild_permissions(Permissions.MANAGE_GUILD)
+    @checks.check(checks.has_guild_permissions(Permissions.MANAGE_GUILD))
     @prefix_group.command(name="remove", aliases=["delete", "rm", "del"])
     async def prefix_remove_command(self, ctx: "Context", *, prefix: str) -> None:
         """Remove a prefix from your guild."""

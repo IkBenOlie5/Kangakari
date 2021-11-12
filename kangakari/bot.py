@@ -46,20 +46,22 @@ class Bot(lightbulb.Bot):
         self._static = "./kangakari/data/static"
 
         self.version = version
-        self.config = Config()
 
         super().__init__(
-            token=self.config.TOKEN,
-            owner_ids=self.config.OWNER_IDS,
+            token=Config.TOKEN,
+            owner_ids=Config.OWNER_IDS,
             intents=Intents.ALL,
             prefix=lightbulb.when_mentioned_or(self.resolve_prefix),
             insensitive_commands=True,
             ignore_bots=True,
-            logs=self.config.LOG_LEVEL,
+            logs=Config.LOG_LEVEL,
             help_class=Help,
         )
 
+        self.log = logging.getLogger("root")
         self.setup_logger()
+
+        lightbulb.commands.typing_override({"Context": Context})
 
         subscriptions = {
             events.StartingEvent: self.on_starting,
@@ -78,50 +80,38 @@ class Bot(lightbulb.Bot):
         self.redis_cache = RedisCache(
             self,
             self,
-            address=self.config.REDIS_ADDRESS,
-            password=self.config.REDIS_PASSWORD,
+            address=Config.REDIS_ADDRESS,
+            password=Config.REDIS_PASSWORD,
             ssl=False,
         )
+        self.session = ClientSession()
         self.lavalink: lavasnek_rs.Lavalink = None
 
     def get_context(self, *args: typing.Any, **kwargs: typing.Any) -> Context:
         return Context(self, *args, **kwargs)
 
     def setup_logger(self) -> None:
-        self.log = logging.getLogger("root")
         self.log.setLevel(logging.INFO)
 
-        file_handler = logging.handlers.TimedRotatingFileHandler(  # type: ignore
-            "./kangakari/data/logs/main.log",
-            when="D",
-            interval=3,
-            encoding="utf-8",
-            backupCount=10,
-        )
-
-        formatter = logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: %(message)s")
-        file_handler.setFormatter(formatter)
-        self.log.addHandler(file_handler)
+        fh = logging.FileHandler("./kangakari/data/logs/main.log", encoding="utf-8")
+        fh.setFormatter(logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: %(message)s"))
+        fh.setLevel(logging.DEBUG)
+        self.log.addHandler(fh)
 
     async def on_starting(self, _: events.StartingEvent) -> None:
-        self.session = ClientSession()
         await self.db.connect()
         await self.redis_cache.open()
 
-        for plugin in self._plugins:
-            try:
-                self.load_extension(f"kangakari.core.plugins.{plugin}")
-                logging.info("Plugin '%s' has been loaded.", plugin)
-            except lightbulb.errors.ExtensionMissingLoad:
-                logging.error("Plugin '%s' is missing a load function.", plugin)
+        self.load_extensions_from("./kangakari/core/plugins")
+        self.load_extensions_from("./kangakari/core/slash_commands")
 
     async def on_started(self, _: events.StartedEvent) -> None:
         self.scheduler.start()
 
         builder = (
-            lavasnek_rs.LavalinkBuilder(self.get_me().id, self.config.TOKEN)
+            lavasnek_rs.LavalinkBuilder(self.get_me().id, Config.TOKEN)
             .set_host("127.0.0.1")
-            .set_password(self.config.LAVALINK_PASSWORD)
+            .set_password(Config.LAVALINK_PASSWORD)
         )
         builder.set_start_gateway(False)
         self.lavalink = await builder.build(EventHandler())
@@ -134,7 +124,7 @@ class Bot(lightbulb.Bot):
 
     async def resolve_prefix(self, _: lightbulb.Bot, message: "Message") -> typing.Union[typing.Sequence[str], str]:
         if message.guild_id is None:
-            return self.config.DEFAULT_PREFIX
+            return Config.DEFAULT_PREFIX
         try:
             prefixes = await self.redis_cache.get_prefixes(message.guild_id)
         except EntryNotFound:

@@ -102,7 +102,7 @@ class Music(Plugin):
 
     @commands.command(name="leave", aliases=["disconnect"])
     async def leave_command(self, ctx: "Context") -> None:
-        """Leave a chennel."""
+        """Leave a channel."""
         await self._leave(ctx.guild_id)
 
         await ctx.success("Left voice channel.")
