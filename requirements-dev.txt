@@ -4,3 +4,5 @@ safety~=1.10.3
 black==21.7b0
 isort==5.9.3
 codespell==2.1.0
+types-pytz==2021.1.2
+types-aiofiles==0.1.9

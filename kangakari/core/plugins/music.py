@@ -36,6 +36,7 @@ class EventHandler:
 
 
 class Music(Plugin):
+    """Commands to play music."""
     __slots__ = ("bot",)
 
     def __init__(self, bot: "Bot") -> None:
