@@ -32,7 +32,6 @@ class Bot(lightbulb.Bot):
         "_dynamic",
         "_static",
         "version",
-        "config",
         "scheduler",
         "db",
         "embeds",
@@ -41,9 +40,8 @@ class Bot(lightbulb.Bot):
     )
 
     def __init__(self, version: str) -> None:
-        self._plugins = [p.stem for p in Path(".").glob("./kangakari/core/plugins/*.py")]
-        self._dynamic = "./kangakari/data/dynamic"
-        self._static = "./kangakari/data/static"
+        self._dynamic = "./.data/dynamic"
+        self._static = "./.data/static"
 
         self.version = version
 
@@ -85,7 +83,7 @@ class Bot(lightbulb.Bot):
             ssl=False,
         )
         self.session = ClientSession()
-        self.lavalink: lavasnek_rs.Lavalink = None
+        self.lavalink: typing.Optional[lavasnek_rs.Lavalink] = None
 
     def get_context(self, *args: typing.Any, **kwargs: typing.Any) -> Context:
         return Context(self, *args, **kwargs)
@@ -93,7 +91,7 @@ class Bot(lightbulb.Bot):
     def setup_logger(self) -> None:
         self.log.setLevel(logging.INFO)
 
-        fh = logging.FileHandler("./kangakari/data/logs/main.log", encoding="utf-8")
+        fh = logging.FileHandler("./.data/logs/main.log", encoding="utf-8")
         fh.setFormatter(logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: %(message)s"))
         fh.setLevel(logging.DEBUG)
         self.log.addHandler(fh)

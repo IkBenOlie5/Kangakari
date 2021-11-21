@@ -5,12 +5,12 @@ if typing.TYPE_CHECKING:
 
 from lightbulb import slash_commands
 
-from kangakari.core import Config
+from kangakari.core import config
 
 
 class Ping(slash_commands.SlashCommand):
     description = "test"
-    enabled_guilds = (Config.TEST_GUILD_ID,)
+    enabled_guilds = (config.TEST_GUILD_ID,)
 
     async def callback(self, ctx: slash_commands.SlashCommandContext) -> None:
         await ctx.respond("pong")
