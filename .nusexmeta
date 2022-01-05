@@ -1,0 +1,1 @@
+{"template": "app", "files": [".isort.cfg", ".flake8", ".DS_Store", "LICENSE", "requirements.txt", "dev-requirements.txt", "pyproject.toml", ".editorconfig", "README.md", "mypy.ini", ".gitignore", ".env", "PROJECTNAME/__init__.py"], "language": "python"}

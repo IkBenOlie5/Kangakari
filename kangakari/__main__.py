@@ -1,18 +1,8 @@
-import os
-
-from kangakari import Bot
-from kangakari import __version__
+from kangakari import bot
 
 
 def main() -> None:
-    if os.name != "nt":
-        # uvloop doesn't work with lavasnek_rs
-        """import uvloop
-
-        uvloop.install()"""
-
-    bot = Bot(__version__)
-    bot.run(asyncio_debug=True)
+    bot.run()
 
 
 if __name__ == "__main__":

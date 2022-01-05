@@ -1,0 +1,8 @@
+flake8
+mypy
+safety
+black
+isort
+codespell
+types-aiofiles==0.8.0
+types-pytz==2021.3.3

@@ -1,5 +1,0 @@
-CREATE TABLE IF NOT EXISTS guilds (
-    guild_id BIGINT NOT NULL PRIMARY KEY,
-    prefixes TEXT [] DEFAULT '{"%s"}'
-);
---CREATE TABLE IF NOT EXISTS users (user_id BIGINT NOT NULL PRIMARY KEY);

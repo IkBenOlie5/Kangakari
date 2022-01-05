@@ -1,150 +1,93 @@
-import logging
-import typing
-from pathlib import Path
+from __future__ import annotations
 
-import lavasnek_rs
+import logging
+import os
+import traceback
+
+import hikari
 import lightbulb
+import sake
 from aiohttp import ClientSession
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-from hikari import Intents
-from hikari import events
-from sake import redis
-from sake.errors import EntryNotFound
 
-from kangakari.core import Config
-from kangakari.core import Context
-from kangakari.core import Database
-from kangakari.core import Embeds
-from kangakari.core import Help
-from kangakari.core.plugins.music import EventHandler
+from kangakari import Config
+from kangakari import Database
 
-if typing.TYPE_CHECKING:
-    from hikari import Message
+log = logging.getLogger(__name__)
 
 
-class RedisCache(redis.PrefixCache, redis.RedisCache):
-    __slots__ = ()
+bot = lightbulb.BotApp(
+    Config.TOKEN,
+    ignore_bots=True,
+    owner_ids=Config.OWNER_IDS,
+    default_enabled_guilds=Config.TEST_GUILD_ID,
+    case_insensitive_prefix_commands=True,
+    intents=hikari.Intents.ALL,
+)
 
 
-class Bot(lightbulb.Bot):
-    __slots__ = (
-        "_plugins",
-        "_dynamic",
-        "_static",
-        "version",
-        "scheduler",
-        "db",
-        "embeds",
-        "redis_cache",
-        "lavalink",
+bot.d.sched = AsyncIOScheduler()
+bot.d.db = Database(Config.POSTGRES_DSN)
+bot.d.redis_cache = sake.RedisCache(
+    app=bot, event_manager=bot.event_manager, address=Config.REDIS_ADDRESS, password=Config.REDIS_PASSWORD
+)
+
+
+bot.load_extensions_from("./kangakari/extensions")
+
+
+@bot.listen(hikari.StartingEvent)
+async def on_starting(_: hikari.StartingEvent) -> None:
+    bot.d.sched.start()
+    bot.d.session = ClientSession()
+    log.info("AIOHTTP session created")
+
+    await bot.d.db.connect()
+
+
+@bot.listen(hikari.StartedEvent)
+async def on_started(_: hikari.StartedEvent) -> None:
+    await bot.d.db.sync(bot.cache.get_available_guilds_view(), Config.DEFAULT_PREFIX)
+
+
+@bot.listen(hikari.StoppingEvent)
+async def on_stopping(_: hikari.StoppingEvent) -> None:
+    await bot.d.db.close()
+    await bot.d.session.close()
+    log.info("AIOHTTP session closed")
+    bot.d.sched.shutdown()
+
+
+@bot.listen(lightbulb.CommandErrorEvent)
+async def on_command_error(e: lightbulb.CommandErrorEvent) -> None:
+    exc = getattr(e.exception, "__cause__", e.exception)
+
+    # handle errors
+
+    message = "".join(traceback.format_exception(type(exc), exc, exc.__traceback__))
+    log.error(message)
+
+    error_id = await bot.d.db.fetch_val(
+        "INSERT INTO errors (message) VALUES ($1) RETURNING error_id",
+        message,
     )
 
-    def __init__(self, version: str) -> None:
-        self._dynamic = "./.data/dynamic"
-        self._static = "./.data/static"
-
-        self.version = version
-
-        super().__init__(
-            token=Config.TOKEN,
-            owner_ids=Config.OWNER_IDS,
-            intents=Intents.ALL,
-            prefix=lightbulb.when_mentioned_or(self.resolve_prefix),
-            insensitive_commands=True,
-            ignore_bots=True,
-            logs=Config.LOG_LEVEL,
-            help_class=Help,
-        )
-
-        self.log = logging.getLogger("root")
-        self.setup_logger()
-
-        lightbulb.commands.typing_override({"Context": Context})
-
-        subscriptions = {
-            events.StartingEvent: self.on_starting,
-            events.StartedEvent: self.on_started,
-            events.StoppingEvent: self.on_stopping,
-            events.GuildAvailableEvent: self.on_guild_available,
-            events.GuildLeaveEvent: self.on_guild_leave,
-            events.GuildMessageCreateEvent: self.on_guild_message_create,
-        }
-        for e, c in subscriptions.items():
-            self.event_manager.subscribe(e, c)
-
-        self.scheduler = AsyncIOScheduler()
-        self.db = Database(self)
-        self.embeds = Embeds()
-        self.redis_cache = RedisCache(
-            self,
-            self,
-            address=Config.REDIS_ADDRESS,
-            password=Config.REDIS_PASSWORD,
-            ssl=False,
-        )
-        self.session = ClientSession()
-        self.lavalink: typing.Optional[lavasnek_rs.Lavalink] = None
-
-    def get_context(self, *args: typing.Any, **kwargs: typing.Any) -> Context:
-        return Context(self, *args, **kwargs)
-
-    def setup_logger(self) -> None:
-        self.log.setLevel(logging.INFO)
-
-        fh = logging.FileHandler("./.data/logs/main.log", encoding="utf-8")
-        fh.setFormatter(logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: %(message)s"))
-        fh.setLevel(logging.DEBUG)
-        self.log.addHandler(fh)
-
-    async def on_starting(self, _: events.StartingEvent) -> None:
-        await self.db.connect()
-        await self.redis_cache.open()
-
-        self.load_extensions_from("./kangakari/core/plugins")
-        self.load_extensions_from("./kangakari/core/slash_commands")
-
-    async def on_started(self, _: events.StartedEvent) -> None:
-        self.scheduler.start()
-
-        builder = (
-            lavasnek_rs.LavalinkBuilder(self.get_me().id, Config.TOKEN)
-            .set_host("127.0.0.1")
-            .set_password(Config.LAVALINK_PASSWORD)
-        )
-        builder.set_start_gateway(False)
-        self.lavalink = await builder.build(EventHandler())
-
-    async def on_stopping(self, _: events.StoppingEvent) -> None:
-        self.scheduler.shutdown()
-        await self.db.close()
-        await self.session.close()
-        logging.info("Closed aiohttp session.")
-
-    async def resolve_prefix(self, _: lightbulb.Bot, message: "Message") -> typing.Union[typing.Sequence[str], str]:
-        if message.guild_id is None:
-            return Config.DEFAULT_PREFIX
-        try:
-            prefixes = await self.redis_cache.get_prefixes(message.guild_id)
-        except EntryNotFound:
-            prefixes = await self.db.val("SELECT prefixes FROM guilds WHERE guild_id = $1", message.guild_id)
-            await self.redis_cache.set_prefixes(
-                message.guild_id,
-                prefixes,
+    await e.context.respond(
+        "".join(
+            (
+                f"An error occurred. Please contact {' | '.join(f'<@{owner_id}>' for owner_id in Config.OWNER_IDS)}",
+                f" with this ID: `{error_id}`.",
             )
-        return prefixes
-
-    async def on_guild_available(self, e: events.GuildAvailableEvent) -> None:
-        await self.db.wait_until_connected()
-        await self.db.execute(
-            "INSERT INTO guilds (guild_id) VALUES ($1) ON CONFLICT DO NOTHING",
-            e.guild_id,
         )
+    )
 
-    async def on_guild_leave(self, e: events.GuildLeaveEvent) -> None:
-        await self.db.wait_until_connected()
-        await self.db.execute("DELETE FROM guilds WHERE guild_id = $1", e.guild_id)
 
-    async def on_guild_message_create(self, e: events.GuildMessageCreateEvent) -> None:
-        """await self.db.wait_until_connected()
-        if not e.author_id == self.me.id:
-            await self.db.execute("INSERT INTO users (user_id) VALUES ($1) ON CONFLICT DO NOTHING", e.author_id)"""
+def run() -> None:
+    if os.name != "nt":
+        import uvloop
+
+        uvloop.install()
+    bot.run(asyncio_debug=True)
+
+
+__all__ = ["run"]
