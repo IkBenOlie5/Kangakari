@@ -79,14 +79,6 @@ async def cmd_error(ctx: lightbulb.context.SlashContext) -> None:
     # directly sending attachments doesn't work
 
 
-@plugin.command
-@lightbulb.add_checks(lightbulb.owner_only)
-@lightbulb.command("test", "Get the error message.", ephemeral=True)
-@lightbulb.implements(lightbulb.commands.SlashCommand)
-async def cmd_test(ctx: lightbulb.context.SlashContext) -> None:
-    raise Exception("suck my balls")
-
-
 def load(bot: lightbulb.BotApp) -> None:
     bot.add_plugin(plugin)
 

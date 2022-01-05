@@ -43,6 +43,7 @@ async def on_starting(_: hikari.StartingEvent) -> None:
     log.info("AIOHTTP session created")
 
     await bot.d.db.connect()
+    await bot.d.redis_cache.open()
 
 
 @bot.listen(hikari.StartedEvent)
@@ -73,12 +74,8 @@ async def on_command_error(e: lightbulb.CommandErrorEvent) -> None:
     )
 
     await e.context.respond(
-        "".join(
-            (
-                f"An error occurred. Please contact {' | '.join(f'<@{owner_id}>' for owner_id in Config.OWNER_IDS)}",
-                f" with this ID: `{error_id}`.",
-            )
-        )
+        f"An error occurred. Please contact {' | '.join(f'<@{owner_id}>' for owner_id in Config.OWNER_IDS)}"
+        f" with this ID: `{error_id}`.",
     )
 
 

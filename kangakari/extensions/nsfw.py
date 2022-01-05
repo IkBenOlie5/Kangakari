@@ -25,7 +25,7 @@ async def cmd_rule34(ctx: lightbulb.context.SlashContext) -> None:
     ) as resp:
         json = await resp.json()
         if json is None:
-            await ctx.respond(f"No post was found with tag(s) `{ctx.options.tags}`.")
+            await ctx.respond("No post was found with those tag(s).")
             return
         post = json[0]
     await ctx.respond(post["sample_url"])
@@ -36,14 +36,14 @@ async def cmd_rule34(ctx: lightbulb.context.SlashContext) -> None:
 @lightbulb.option("query", "The query to search for.")
 @lightbulb.command("porn", "Search a video on eporner.")
 @lightbulb.implements(lightbulb.commands.SlashCommand)
-async def cmd_rule34(ctx: lightbulb.context.SlashContext) -> None:
+async def cmd_porn(ctx: lightbulb.context.SlashContext) -> None:
     async with ctx.bot.d.session.get(
         "https://www.eporner.com/api/v2/video/search/",
         params={"per_page": 1, "query": ctx.options.query.replace(" ", "+")},
     ) as resp:
         json = await resp.json()
         if json is None:
-            await ctx.respond(f"No video was found with query `{ctx.options.query}`.")
+            await ctx.respond("No video was found with that query.")
             return
         video = json["videos"][0]
     await ctx.respond(video["url"])
