@@ -35,7 +35,7 @@ class Database:
         await self._pool.close()
         log.info("Closed database pool")
 
-    async def sync(self, guilds: list[hikari.Guild], default_prefix: str) -> None:
+    async def sync(self, guilds: t.Mapping[hikari.Snowflake, hikari.GatewayGuild], default_prefix: str) -> None:
         async with aiofiles.open("./data/build.sql") as f:
             await self.execute((await f.read()) % default_prefix)
         log.info("Built database")
