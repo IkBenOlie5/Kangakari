@@ -39,7 +39,7 @@ def str_to_timedelta(timedelta_str: str) -> datetime.timedelta | None:
 @plugin.command
 @lightbulb.option("text", "The remind text.", required=False)
 @lightbulb.option("timedelta", "The timedelta to remind you.")
-@lightbulb.command("reminder", "Create a reminder.", aliases=["remind"])
+@lightbulb.command("reminder", "Create a reminder.")
 @lightbulb.implements(lightbulb.commands.SlashCommand)
 async def cmd_reminder(ctx: lightbulb.context.SlashContext) -> None:
     timedelta = str_to_timedelta(ctx.options.timedelta)
