@@ -26,7 +26,7 @@ bot = lightbulb.BotApp(
 )
 
 
-bot.d.sched = AsyncIOScheduler()
+bot.d.scheduler = AsyncIOScheduler()
 bot.d.db = Database(Config.POSTGRES_DSN)
 bot.d.redis_cache = sake.RedisCache(
     app=bot, event_manager=bot.event_manager, address=Config.REDIS_ADDRESS, password=Config.REDIS_PASSWORD
@@ -38,7 +38,7 @@ bot.load_extensions_from("./kangakari/extensions")
 
 @bot.listen(hikari.StartingEvent)
 async def on_starting(_: hikari.StartingEvent) -> None:
-    bot.d.sched.start()
+    bot.d.scheduler.start()
     bot.d.session = ClientSession()
     log.info("AIOHTTP session created")
 
@@ -55,7 +55,7 @@ async def on_stopping(_: hikari.StoppingEvent) -> None:
     await bot.d.db.close()
     await bot.d.session.close()
     log.info("AIOHTTP session closed")
-    bot.d.sched.shutdown()
+    bot.d.scheduler.shutdown()
 
 
 @bot.listen(lightbulb.CommandErrorEvent)

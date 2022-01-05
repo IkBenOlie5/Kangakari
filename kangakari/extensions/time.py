@@ -47,7 +47,7 @@ async def cmd_reminder(ctx: lightbulb.context.SlashContext) -> None:
         await ctx.respond("Couldn't convert timedelta.")
         return
     text = ctx.options.text
-    ctx.bot.d.sched.add_job(
+    ctx.bot.d.scheduler.add_job(
         ctx.respond,
         "date",
         (f"{ctx.author.mention}\nReminder{f': `{text}`' if text else ''}",),
