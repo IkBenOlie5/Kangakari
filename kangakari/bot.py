@@ -25,6 +25,11 @@ bot = lightbulb.BotApp(
     intents=hikari.Intents.ALL,
 )
 
+fh = logging.FileHandler("./data/logs/bot.log")
+fh.setFormatter(logging.Formatter("%(levelname)-1.1s %(asctime)23.23s %(name)s: %(message)s"))
+fh.setLevel(logging.DEBUG)
+logging.root.addHandler(fh)
+
 
 bot.d.scheduler = AsyncIOScheduler()
 bot.d.db = Database(Config.POSTGRES_DSN)
