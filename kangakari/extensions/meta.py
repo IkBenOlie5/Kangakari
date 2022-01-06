@@ -42,7 +42,7 @@ async def cmd_source(ctx: lightbulb.context.SlashContext) -> None:
     command = ctx.bot.get_slash_command(ctx.options.command)
     if command is None:
         await ctx.respond("That command doesn't exist.")
-    code = textwrap.dedent((inspect.getsource(command.callback))).replace("\x60", "\u02CB")
+    code = textwrap.dedent((inspect.getsource(command.callback)))
     m = await ctx.respond(f"The source code for {command.name}.")
     b = BytesIO(code.encode())
     b.seek(0)
@@ -112,6 +112,7 @@ async def cmd_avatar(ctx: lightbulb.context.SlashContext) -> None:
 @lightbulb.implements(lightbulb.commands.SlashCommand)
 async def cmd_bot_info(ctx: lightbulb.context.SlashContext) -> None:
     bot_user = ctx.bot.get_me()
+    ctx.bot.get_me()
     await ctx.respond(
         f"Developer(s): {' | '.join(f'<@{owner_id}>' for owner_id in ctx.bot.owner_ids)}\n"
         f"Guilds: `{len(ctx.bot.cache.get_available_guilds_view())}`\n"
@@ -122,6 +123,7 @@ async def cmd_bot_info(ctx: lightbulb.context.SlashContext) -> None:
         f"Lightbulb version: `{lightbulb.__version__}`\n"
         f"Avatar: {bot_user.avatar_url or bot_user.default_avatar_url}"
     )
+
 
 @plugin.command
 @lightbulb.option("role", "The role to get the information from.", hikari.Role)
@@ -141,9 +143,6 @@ async def cmd_role_info(ctx: lightbulb.context.SlashContext) -> None:
         f"Position: `{role.position}`\n"
         f"Members: `{len([m for m in  ms.values() if role.id in m.role_ids])}`"
     )
-
-
-
 
 
 def load(bot: lightbulb.BotApp) -> None:
