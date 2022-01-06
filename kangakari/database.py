@@ -35,19 +35,10 @@ class Database:
         await self._pool.close()
         log.info("Closed database pool")
 
-    async def sync(self, guilds: t.Mapping[hikari.Snowflake, hikari.GatewayGuild], default_prefix: str) -> None:
+    async def build(self) -> None:
         async with aiofiles.open("./data/build.sql") as f:
-            await self.execute((await f.read()) % default_prefix)
+            await self.execute((await f.read()))
         log.info("Built database")
-
-        await self.execute_many(
-            "INSERT INTO guilds (guild_id) VALUES ($1) ON CONFLICT DO NOTHING", [(guild,) for guild in guilds]
-        )
-        stored = [guild_id for guild_id in await self.fetch_column("SELECT guild_id FROM guilds")]
-        to_remove = [(guild_id,) for guild_id in set(stored) - set(guilds)]
-        await self.execute_many("DELETE FROM guilds WHERE guild_id = $1;", to_remove)
-
-        log.info("Synchronised database")
 
     async def execute(self, command: str, *args: t.Any) -> None:
         async with _acquire(self._pool) as conn:

@@ -20,7 +20,7 @@ bot = lightbulb.BotApp(
     Config.TOKEN,
     ignore_bots=True,
     owner_ids=Config.OWNER_IDS,
-    default_enabled_guilds=Config.TEST_GUILD_ID,
+    default_enabled_guilds=Config.TEST_GUILD_ID,  # this is temporary
     case_insensitive_prefix_commands=True,
     intents=hikari.Intents.ALL,
 )
@@ -48,7 +48,7 @@ async def on_starting(_: hikari.StartingEvent) -> None:
 
 @bot.listen(hikari.StartedEvent)
 async def on_started(_: hikari.StartedEvent) -> None:
-    await bot.d.db.sync(bot.cache.get_available_guilds_view(), Config.DEFAULT_PREFIX)
+    await bot.d.db.build()
 
 
 @bot.listen(hikari.StoppingEvent)
