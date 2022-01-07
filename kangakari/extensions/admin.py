@@ -4,10 +4,11 @@ import logging
 from io import BytesIO
 from subprocess import PIPE
 from subprocess import run
-from kangakari import Config
 
 import hikari
 import lightbulb
+
+from kangakari import Config
 
 plugin = lightbulb.Plugin("Admin", default_enabled_guilds=Config.TEST_GUILD_ID)
 

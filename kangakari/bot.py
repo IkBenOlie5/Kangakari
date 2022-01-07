@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import logging
-import os
 import traceback
 
 import hikari
@@ -85,10 +84,11 @@ async def on_command_error(e: lightbulb.CommandErrorEvent) -> None:
 
 
 def run() -> None:
-    if os.name != "nt":
-        import uvloop
-
-        uvloop.install()
+    # lavasnek_rs doesn't work with uvloop
+    # if os.name != "nt":
+    #    import uvloop
+    #
+    #    uvloop.install()
     bot.run(asyncio_debug=True)
 
 
