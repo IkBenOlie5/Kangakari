@@ -5,6 +5,7 @@ import traceback
 
 import hikari
 import lightbulb
+import msgpack
 import sake
 from aiohttp import ClientSession
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -33,7 +34,13 @@ logging.root.addHandler(fh)
 bot.d.scheduler = AsyncIOScheduler()
 bot.d.db = Database(Config.POSTGRES_DSN)
 bot.d.redis_cache = sake.RedisCache(
-    app=bot, event_manager=bot.event_manager, address=Config.REDIS_ADDRESS, password=Config.REDIS_PASSWORD
+    app=bot,
+    event_manager=bot.event_manager,
+    address=Config.REDIS_ADDRESS,
+    password=Config.REDIS_PASSWORD,
+    event_managed=True,
+    dumps=msgpack.dumps,
+    loads=msgpack.loads,
 )
 
 
@@ -71,7 +78,9 @@ async def on_command_error(e: lightbulb.CommandErrorEvent) -> None:
     # handle errors
     match exc:
         case _:
-            log.error("An unhandled exception occurred executing a command (%s)", e.context.command.name, exc_info=exc_info)
+            log.error(
+                "An unhandled exception occurred executing a command (%s)", e.context.command.name, exc_info=exc_info
+            )
 
             error_id = await bot.d.db.fetch_val(
                 "INSERT INTO errors (message) VALUES ($1) RETURNING error_id",

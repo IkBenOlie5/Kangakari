@@ -9,3 +9,4 @@ aiofiles==0.8.0
 pytz==2021.3
 hikari-sake==1.0.0a1
 lavasnek_rs==0.1.0a3
+msgpack==1.0.3
