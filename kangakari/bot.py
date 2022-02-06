@@ -72,25 +72,22 @@ async def on_stopping(_: hikari.StoppingEvent) -> None:
 
 @bot.listen(lightbulb.CommandErrorEvent)
 async def on_command_error(e: lightbulb.CommandErrorEvent) -> None:
-    exc = getattr(e.exception, "__cause__", e.exception)
+    # exc = getattr(e.exception, "__cause__", e.exception)
     exc_info = e.exc_info
 
     # handle errors
-    match exc:
-        case _:
-            log.error(
-                "An unhandled exception occurred executing a command (%s)", e.context.command.name, exc_info=exc_info
-            )
 
-            error_id = await bot.d.db.fetch_val(
-                "INSERT INTO errors (message) VALUES ($1) RETURNING error_id",
-                "".join(traceback.format_exception(*exc_info)),
-            )
+    log.error("An unhandled exception occurred executing a command (%s)", e.context.command.name, exc_info=exc_info)
 
-            await e.context.respond(
-                f"An error occurred. Please contact {' | '.join(f'<@{owner_id}>' for owner_id in Config.OWNER_IDS)}"
-                f" with this ID: `{error_id}`.",
-            )
+    error_id = await bot.d.db.fetch_val(
+        "INSERT INTO errors (message) VALUES ($1) RETURNING error_id",
+        "".join(traceback.format_exception(*exc_info)),
+    )
+
+    await e.context.respond(
+        f"An error occurred. Please contact {' | '.join(f'<@{owner_id}>' for owner_id in Config.OWNER_IDS)}"
+        f" with this ID: `{error_id}`.",
+    )
 
 
 def run() -> None:

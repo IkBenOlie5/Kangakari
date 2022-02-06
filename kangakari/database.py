@@ -6,7 +6,6 @@ from contextlib import asynccontextmanager
 
 import aiofiles
 import asyncpg
-import hikari
 
 log = logging.getLogger(__name__)
 

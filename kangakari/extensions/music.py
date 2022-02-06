@@ -133,7 +133,7 @@ async def cmd_play(ctx: lightbulb.context.SlashContext) -> None:
     try:
         await plugin.bot.d.lavalink.play(ctx.guild_id, query_information.tracks[0]).requester(ctx.author.id).queue()
     except lavasnek_rs.NoSessionPresent:
-        await ctx.respond(f"Use /join first.")
+        await ctx.respond("Use /join first.")
         return
     await ctx.respond(f"Added `{query_information.tracks[0].info.title}` to the queue.")
 
