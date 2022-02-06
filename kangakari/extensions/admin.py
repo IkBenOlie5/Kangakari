@@ -73,12 +73,9 @@ async def cmd_error(ctx: lightbulb.context.SlashContext) -> None:
         return
 
     message, timestamp = record
-    m = await ctx.respond(f"Error on <t:{int(timestamp.timestamp())}:f>")
     b = BytesIO(message.encode())
     b.seek(0)
-    await m.edit(attachment=hikari.Bytes(b, f"error_{id}.txt"))
-
-    # directly sending attachments doesn't work
+    await ctx.respond(f"Error on <t:{int(timestamp.timestamp())}:f>", attachment=hikari.Bytes(b, f"error_{id}.txt"))
 
 
 def load(bot: lightbulb.BotApp) -> None:

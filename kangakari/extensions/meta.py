@@ -43,10 +43,9 @@ async def cmd_source(ctx: lightbulb.context.SlashContext) -> None:
     if command is None:
         await ctx.respond("That command doesn't exist.")
     code = textwrap.dedent((inspect.getsource(command.callback)))
-    m = await ctx.respond(f"The source code for {command.name}.")
     b = BytesIO(code.encode())
     b.seek(0)
-    await m.edit(attachment=hikari.Bytes(b, f"source_{command.name}.py"))
+    await ctx.respond(f"The source code for {command.name}.", attachment=hikari.Bytes(b, f"source_{command.name}.py"))
 
 
 @plugin.command
