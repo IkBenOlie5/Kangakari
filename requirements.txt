@@ -3,7 +3,7 @@ asyncpg==0.25.0
 hikari[speedups]==2.0.0.dev106
 hikari-lightbulb==2.2.0
 apscheduler==3.8.1
-aiohttp==3.8.1
+aiohttp==3.9.4
 uvloop==0.16.0; os_name != "nt"
 aiofiles==0.8.0
 pytz==2021.3
